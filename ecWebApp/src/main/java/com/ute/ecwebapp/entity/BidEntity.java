@@ -37,7 +37,7 @@ public class BidEntity implements Serializable {
 	@Id
 	@ManyToOne
 	@JoinColumn(name = "item_id", nullable = false)
-	private ItemauctionEntity itemauction;
+	private ItemauctionEntity itemAuction;
 
 	@Id
 	@ManyToOne

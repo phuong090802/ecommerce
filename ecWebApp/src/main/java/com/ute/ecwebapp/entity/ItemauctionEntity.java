@@ -3,24 +3,14 @@ package com.ute.ecwebapp.entity;
 import java.sql.Date;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.hibernate.annotations.Check;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
-@Table(name = "itemauction")
+@Table(name = "item_auction")
 @Check(constraints = "start_date < end_date")
 @Data
 @AllArgsConstructor
@@ -31,13 +21,13 @@ public class ItemauctionEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer itemAuctionId;
 
-	@Column(columnDefinition = "NVARCHAR(255)", nullable = false)
+	@Column(nullable = false)
 	private String description;
 
-	@Column(columnDefinition = "NVARCHAR(255)", nullable = false)
+	@Column(nullable = false)
 	private String title;
 
-	@Column(length = 255, nullable = false)
+	@Column(nullable = false)
 	private String photo;
 
 	@Column(name = "start_bid_amount", columnDefinition = "DECIMAL(12,2) NOT NULL DEFAULT 0")
@@ -60,12 +50,9 @@ public class ItemauctionEntity {
 	private UserEntity user;
 
 	@ManyToOne
-	@JoinColumn(name = "gener_id", nullable = false)
+	@JoinColumn(name = "genre_id", nullable = false)
 	private GenreEntity genre;
 
-	@OneToMany(mappedBy = "itemauction")
-	private Set<BidWinnerEntity> bidWinners;
-
-	@OneToMany(mappedBy = "itemauction")
+	@OneToMany(mappedBy = "itemAuction")
 	private Set<BidEntity> bids;
 }

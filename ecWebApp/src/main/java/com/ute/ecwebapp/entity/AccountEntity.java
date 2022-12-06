@@ -1,16 +1,9 @@
 package com.ute.ecwebapp.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 
 @Entity
 @Table(name = "account")
@@ -27,9 +20,16 @@ public class AccountEntity {
 	@Column(name = "user_name", length = 40, nullable = false, unique = true)
 	private String userName;
 
-	@Column(length = 255, nullable = false)
+	@Column(nullable = false)
 	private String password;
 	
 	@OneToOne(mappedBy = "account")
 	private UserEntity user;
+
+	public AccountEntity(String userName, String password) {
+		super();
+		this.userName = userName;
+		this.password = password;
+	}
+	
 }

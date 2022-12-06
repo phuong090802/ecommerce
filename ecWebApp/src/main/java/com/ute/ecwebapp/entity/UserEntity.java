@@ -2,20 +2,9 @@ package com.ute.ecwebapp.entity;
 
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "user")
@@ -29,13 +18,12 @@ public class UserEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer userId;
 
-	@Column(name = "user_name", columnDefinition = "NVARCHAR(40)", nullable = false)
+	@Column(name = "user_name", length = 40, nullable = false)
 	private String userName;
 
 	@Column(length = 10)
 	private String phone;
 
-	@Column(length = 255)
 	private String email;
 
 	@OneToOne(cascade = CascadeType.ALL)
