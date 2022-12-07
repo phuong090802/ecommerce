@@ -35,4 +35,14 @@ public class AccountServiceImpl implements AccountService {
 	public boolean accountNameExist(String accountName) {
 		return accountRepository.existsByaccountName(accountName);
 	}
+
+	@Override
+	public AccountEntity getByUser(UserEntity userEntity) {
+		return accountRepository.findByuser(userEntity);
+	}
+
+	@Override
+	public void updateAccount(AccountEntity accountEntity) {
+		accountRepository.save(accountEntity);
+	}
 }

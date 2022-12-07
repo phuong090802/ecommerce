@@ -11,4 +11,6 @@ import com.ute.ecwebapp.entity.UserEntity;
 @Repository
 public interface AddressRepository extends JpaRepository<AddressEntity, Integer> {
 	List<AddressEntity> findAllByuser(UserEntity user);
+	
+	
 }

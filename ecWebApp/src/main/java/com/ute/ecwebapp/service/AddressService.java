@@ -12,4 +12,5 @@ public interface AddressService {
 	List<AddressEntity> getAllByuser(UserEntity user);
 	
 	void updateAddress(UserDto userDto, UserEntity userEntity);
+
 }

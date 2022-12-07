@@ -15,12 +15,15 @@ import com.ute.ecwebapp.exception.UserNotFoundException;
 import com.ute.ecwebapp.repository.*;
 import com.ute.ecwebapp.service.AccountService;
 import com.ute.ecwebapp.service.AddressService;
+import com.ute.ecwebapp.service.RoleService;
 import com.ute.ecwebapp.service.UserService;
 import com.ute.ecwebapp.util.DtoMapper;
 import com.ute.ecwebapp.util.ListEntityToDto;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+	private final int roleNA = 3;
 
 	@Autowired
 	private UserRepository userRepository;
@@ -36,6 +39,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private ListEntityToDto mapEntityToDto;
+
+	@Autowired
+	private RoleService roleService;
 
 	@Override
 	public String createAccount(String json) throws JsonMappingException, JsonProcessingException {
@@ -80,7 +86,7 @@ public class UserServiceImpl implements UserService {
 		UserEntity userEntity = new UserEntity();
 		BeanUtils.copyProperties(userDto, userEntity);
 		userRepository.save(userEntity);
-		addressService.createAddress(userDto, userEntity);
+		addressService.updateAddress(userDto, userEntity);
 		return json;
 	}
 
@@ -89,7 +95,11 @@ public class UserServiceImpl implements UserService {
 		if (!userRepository.existsById(userId)) {
 			throw new UserNotFoundException(userId);
 		}
-		userRepository.deleteById(userId);
-		return "User with user id: " + userId + " has been deleted success.";
+		UserEntity userEntity = new UserEntity();
+		BeanUtils.copyProperties(getUserById(userId), userEntity);
+		AccountEntity accountEntity = accountService.getByUser(userEntity);
+		accountEntity.setRole(roleService.getById(roleNA));
+		accountService.updateAccount(accountEntity);
+		return "User with user id: " + userId + " has been removed USER role.";
 	}
 }
