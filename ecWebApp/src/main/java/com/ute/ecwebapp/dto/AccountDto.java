@@ -1,7 +1,6 @@
 package com.ute.ecwebapp.dto;
 
 
-
 import lombok.*;
 
 @Data
@@ -11,16 +10,19 @@ public class AccountDto {
 
 	private Integer accountId;
 
-	private String userName;
+	private String accountName;
 
 	private String password;
 	
 	private UserDto user;
+	
+	private RoleDto role;
 
-	public AccountDto(String userName, String password) {
+	public AccountDto(String accountName, String password, RoleDto role) {
 		super();
-		this.userName = userName;
+		this.accountName = accountName;
 		this.password = password;
+		this.role = role;
 	}
 	
 }

@@ -9,7 +9,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FeedbackDto {
-
 	private Integer feadBackId;
 
 	private String review;

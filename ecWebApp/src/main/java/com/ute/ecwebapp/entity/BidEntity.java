@@ -3,17 +3,9 @@ package com.ute.ecwebapp.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "bid")
@@ -28,18 +20,19 @@ public class BidEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
+	@Column(nullable =  false)
 	private LocalDateTime time;
-
+	
+	@Column(nullable =  false)
 	private Double value;
 
+	@Column(nullable =  false)
 	private String status;
 
-	@Id
 	@ManyToOne
 	@JoinColumn(name = "item_id", nullable = false)
-	private ItemauctionEntity itemAuction;
+	private ItemAuctionEntity itemAuction;
 
-	@Id
 	@ManyToOne
 	@JoinColumn(name = "buy_id", nullable = false)
 	private UserEntity user;

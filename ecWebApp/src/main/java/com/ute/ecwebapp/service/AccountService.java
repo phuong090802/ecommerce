@@ -1,7 +1,10 @@
 package com.ute.ecwebapp.service;
 
-import com.ute.ecwebapp.dto.AccountDto;
+import com.ute.ecwebapp.dto.UserDto;
+import com.ute.ecwebapp.entity.UserEntity;
 
 public interface AccountService {
-	AccountDto createAccount(AccountDto accountDto);
+	void createAccount(UserDto userDto, UserEntity userEntity);
+	
+	boolean accountNameExist(String accountName);
 }

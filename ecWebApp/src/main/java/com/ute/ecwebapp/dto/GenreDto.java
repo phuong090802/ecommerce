@@ -1,6 +1,6 @@
 package com.ute.ecwebapp.dto;
 
-import java.util.Set;
+import java.util.List;
 
 import lombok.*;
 
@@ -8,10 +8,22 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GenreDto {
-
 	private Integer genreId;
 
 	private String genreName;
 	
-	private Set<ItemauctionDto> itemAuctions;
+	private List<ItemAuctionDto> itemAuctions;
+
+	public GenreDto(String genreName) {
+		super();
+		this.genreName = genreName;
+	}
+
+	public GenreDto(Integer genreId, String genreName) {
+		super();
+		this.genreId = genreId;
+		this.genreName = genreName;
+	}
+	
+	
 }

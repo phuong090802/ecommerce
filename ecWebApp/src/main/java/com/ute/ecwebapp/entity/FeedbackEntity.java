@@ -19,7 +19,6 @@ public class FeedbackEntity {
 	@Column(name = "feedback_id")
 	private Integer feadBackId;
 
-	@Column(length = 40, nullable = false)
 	private String review;
 
 	@Column(nullable = false)

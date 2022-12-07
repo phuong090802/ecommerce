@@ -18,14 +18,16 @@ public class BidWinnerEntity implements Serializable {
 	
 	@EmbeddedId
 	private BidWinnerId bidWinnerId;
-
-	@Column(name = "ship_cost", nullable = false, length = 12, precision = 2)
-	private Double shipCost;
-
+	
 	@Column(nullable = false, length = 12, precision = 2)
 	private Double value;
 	
+	@Column(name = "ship_cost", nullable = false, length = 12, precision = 2)
+	private Double shipCost;
+
 	@ManyToOne
-	@JoinColumn(name = "buy_id", nullable = false)
+	private ItemAuctionEntity itemAuction;
+
+	@ManyToOne
 	private UserEntity user;
 }

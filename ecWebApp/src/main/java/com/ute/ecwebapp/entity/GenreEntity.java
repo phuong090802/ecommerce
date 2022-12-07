@@ -1,6 +1,6 @@
 package com.ute.ecwebapp.entity;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -19,9 +19,22 @@ public class GenreEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer genreId;
 
-	@Column(length = 40, nullable = false, name = "genre_name")
+	@Column(length = 50, nullable = false, name = "genre_name")
 	private String genreName;
 	
 	@OneToMany(mappedBy = "genre")
-	private Set<ItemauctionEntity> itemAuctions;
+	private List<ItemAuctionEntity> itemAuctions;
+
+	public GenreEntity(String genreName) {
+		super();
+		this.genreName = genreName;
+	}
+
+	public GenreEntity(Integer genreId, String genreName) {
+		super();
+		this.genreId = genreId;
+		this.genreName = genreName;
+	}
+	
+	
 }

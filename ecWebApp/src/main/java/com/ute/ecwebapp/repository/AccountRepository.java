@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.ute.ecwebapp.entity.AccountEntity;
 
 @Repository
-public interface AccountRepository extends JpaRepository<AccountEntity, Integer>{
-
+public interface AccountRepository extends JpaRepository<AccountEntity, Integer> {
+	boolean existsByaccountName(String accountName);
 }

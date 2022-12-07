@@ -3,8 +3,8 @@ package com.ute.ecwebapp.dto;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-
 import lombok.*;
+
 
 @Data
 @AllArgsConstructor
@@ -21,7 +21,7 @@ public class BidDto implements Serializable {
 
 	private String status;
 
-	private ItemauctionDto itemAuction;
+	private ItemAuctionDto itemAuction;
 
 	private UserDto user;
 

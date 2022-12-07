@@ -2,7 +2,6 @@ package com.ute.ecwebapp.entity;
 
 import javax.persistence.*;
 
-
 import lombok.*;
 
 @Entity
@@ -17,19 +16,31 @@ public class AccountEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer accountId;
 
-	@Column(name = "user_name", length = 40, nullable = false, unique = true)
-	private String userName;
+	@Column(name = "account_name", length = 50, nullable = false, unique = true)
+	private String accountName;
 
 	@Column(nullable = false)
 	private String password;
-	
-	@OneToOne(mappedBy = "account")
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "user_id", referencedColumnName = "user_id")
 	private UserEntity user;
 
-	public AccountEntity(String userName, String password) {
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "role_id", referencedColumnName = "role_id")
+	private RoleEntity role;
+
+	public AccountEntity(String accountName, String password, RoleEntity role) {
 		super();
-		this.userName = userName;
+		this.accountName = accountName;
+		this.password = password;
+		this.role = role;
+	}
+
+	public AccountEntity(String accountName, String password) {
+		super();
+		this.accountName = accountName;
 		this.password = password;
 	}
-	
+
 }

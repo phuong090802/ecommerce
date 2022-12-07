@@ -2,6 +2,7 @@ package com.ute.ecwebapp.dto;
 
 import java.io.Serializable;
 
+
 import lombok.*;
 
 @Data
@@ -17,5 +18,7 @@ public class BidWinnerDto implements Serializable {
 
 	private Double value;
 	
+	private ItemAuctionDto itemAuction;
+
 	private UserDto user;
 }

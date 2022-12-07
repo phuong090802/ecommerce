@@ -1,6 +1,6 @@
 package com.ute.ecwebapp.dto;
 
-import java.util.Set;
+import java.util.List;
 
 import lombok.*;
 
@@ -19,13 +19,49 @@ public class UserDto {
 
 	private AccountDto account;
 
-	private Set<AddressDto> address;
+	private List<AddressDto> address;
 
-	private Set<ItemauctionDto> itemauctions;
+	private List<ItemAuctionDto> itemauctions;
 
-	private Set<FeedbackDto> feedbacks;
+	private List<FeedbackDto> feedbacks;
 
-	private Set<FeedbackDto> _feedbacks;
-	
-	private Set<BidDto> bids;
+	private List<FeedbackDto> _feedbacks;
+
+	private List<BidDto> bids;
+
+	private List<BidWinnerDto> bidWinners;
+
+	public UserDto(String userName, String phone, String email) {
+		super();
+		this.userName = userName;
+		this.phone = phone;
+		this.email = email;
+	}
+
+	public UserDto(Integer userId, String userName, String phone, String email) {
+		super();
+		this.userId = userId;
+		this.userName = userName;
+		this.phone = phone;
+		this.email = email;
+	}
+
+	public UserDto(String userName, String phone, String email, AccountDto account, List<AddressDto> address) {
+		super();
+		this.userName = userName;
+		this.phone = phone;
+		this.email = email;
+		this.account = account;
+		this.address = address;
+	}
+
+	public UserDto(Integer userId, String userName, String phone, String email, List<AddressDto> address) {
+		super();
+		this.userId = userId;
+		this.userName = userName;
+		this.phone = phone;
+		this.email = email;
+		this.address = address;
+	}
+
 }

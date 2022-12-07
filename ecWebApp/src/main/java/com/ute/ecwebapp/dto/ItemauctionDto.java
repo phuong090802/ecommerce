@@ -1,7 +1,7 @@
 package com.ute.ecwebapp.dto;
 
 import java.sql.Date;
-import java.util.Set;
+import java.util.List;
 
 import org.hibernate.annotations.Check;
 
@@ -11,7 +11,7 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ItemauctionDto {
+public class ItemAuctionDto {
 
 	private Integer itemAuctionId;
 
@@ -35,5 +35,7 @@ public class ItemauctionDto {
 
 	private GenreDto genre;
 
-	private Set<BidDto> bids;
+	private List<BidDto> bids;
+	
+	private List<BidWinnerDto> bidWinners;
 }

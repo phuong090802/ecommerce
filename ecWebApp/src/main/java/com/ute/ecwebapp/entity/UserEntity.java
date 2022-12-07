@@ -1,6 +1,6 @@
 package com.ute.ecwebapp.entity;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -18,30 +18,67 @@ public class UserEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer userId;
 
-	@Column(name = "user_name", length = 40, nullable = false)
+	@Column(name = "user_name", length = 50, nullable = false)
 	private String userName;
 
-	@Column(length = 10)
+	@Column(length = 11, nullable = false)
 	private String phone;
 
+	@Column(nullable = false)
 	private String email;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "account_id", referencedColumnName = "account_id")
+	@OneToOne(mappedBy = "user")
 	private AccountEntity account;
 
 	@OneToMany(mappedBy = "user")
-	private Set<AddressEntity> address;
+	private List<AddressEntity> address;
 
 	@OneToMany(mappedBy = "user")
-	private Set<ItemauctionEntity> itemauctions;
+	private List<ItemAuctionEntity> itemauctions;
 
 	@OneToMany(mappedBy = "user")
-	private Set<FeedbackEntity> feedbacks;
+	private List<FeedbackEntity> feedbacks;
 
 	@OneToMany(mappedBy = "user")
-	private Set<FeedbackEntity> _feedbacks;
-	
+	private List<FeedbackEntity> _feedbacks;
+
 	@OneToMany(mappedBy = "user")
-	private Set<BidEntity> bids;
+	private List<BidEntity> bids;
+
+	@OneToMany(mappedBy = "user")
+	private List<BidWinnerEntity> bidWinners;
+
+	public UserEntity(String userName, String phone, String email) {
+		super();
+		this.userName = userName;
+		this.phone = phone;
+		this.email = email;
+	}
+
+	public UserEntity(Integer userId, String userName, String phone, String email) {
+		super();
+		this.userId = userId;
+		this.userName = userName;
+		this.phone = phone;
+		this.email = email;
+	}
+
+	public UserEntity(String userName, String phone, String email, AccountEntity account, List<AddressEntity> address) {
+		super();
+		this.userName = userName;
+		this.phone = phone;
+		this.email = email;
+		this.account = account;
+		this.address = address;
+	}
+
+	public UserEntity(Integer userId, String userName, String phone, String email, List<AddressEntity> address) {
+		super();
+		this.userId = userId;
+		this.userName = userName;
+		this.phone = phone;
+		this.email = email;
+		this.address = address;
+	}
+
 }

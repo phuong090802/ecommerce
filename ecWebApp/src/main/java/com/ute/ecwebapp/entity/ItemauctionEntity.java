@@ -1,7 +1,7 @@
 package com.ute.ecwebapp.entity;
 
 import java.sql.Date;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -15,7 +15,7 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ItemauctionEntity {
+public class ItemAuctionEntity {
 	@Id
 	@Column(name = "item_auction_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,8 +26,7 @@ public class ItemauctionEntity {
 
 	@Column(nullable = false)
 	private String title;
-
-	@Column(nullable = false)
+	@Column(columnDefinition = "BLOB")
 	private String photo;
 
 	@Column(name = "start_bid_amount", columnDefinition = "DECIMAL(12,2) NOT NULL DEFAULT 0")
@@ -54,5 +53,8 @@ public class ItemauctionEntity {
 	private GenreEntity genre;
 
 	@OneToMany(mappedBy = "itemAuction")
-	private Set<BidEntity> bids;
+	private List<BidEntity> bids;
+	
+	@OneToMany(mappedBy = "itemAuction")
+	private List<BidWinnerEntity> bidWinners;
 }
