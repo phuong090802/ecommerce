@@ -3,11 +3,8 @@ package com.ute.ecwebapp.dto;
 import java.sql.Date;
 import java.util.List;
 
-import org.hibernate.annotations.Check;
-
 import lombok.*;
 
-@Check(constraints = "start_date < end_date")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,6 +18,10 @@ public class ItemAuctionDto {
 
 	private String photo;
 
+	private byte[] photoData;
+
+	private String type;
+
 	private Double startBidAmount;
 
 	private Double autoAcceptAmount;
@@ -31,11 +32,45 @@ public class ItemAuctionDto {
 
 	private Date endDate;
 
-	private UserDto user;
+	private UserDto seller;
 
 	private GenreDto genre;
 
 	private List<BidDto> bids;
-	
+
 	private List<BidWinnerDto> bidWinners;
+
+	public ItemAuctionDto(String description, String title, String photo, byte[] photoData, String type,
+			Double startBidAmount, Double autoAcceptAmount, Double increment, Date startDate, Date endDate,
+			UserDto seller) {
+		super();
+		this.description = description;
+		this.title = title;
+		this.photo = photo;
+		this.photoData = photoData;
+		this.type = type;
+		this.startBidAmount = startBidAmount;
+		this.autoAcceptAmount = autoAcceptAmount;
+		this.increment = increment;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.seller = seller;
+	}
+
+	public ItemAuctionDto(Integer itemAuctionId, String description, String title, String type, Double startBidAmount,
+			Double autoAcceptAmount, Double increment, Date startDate, Date endDate, UserDto seller, GenreDto genre) {
+		super();
+		this.itemAuctionId = itemAuctionId;
+		this.description = description;
+		this.title = title;
+		this.type = type;
+		this.startBidAmount = startBidAmount;
+		this.autoAcceptAmount = autoAcceptAmount;
+		this.increment = increment;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.seller = seller;
+		this.genre = genre;
+	}
+
 }

@@ -26,10 +26,19 @@ public class FeedbackEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "seller_id", nullable = false)
-	private UserEntity user;
+	private UserEntity seller;
 
 	@ManyToOne
 	@JoinColumn(name = "buy_id", nullable = false)
-	private UserEntity _user;
+	private UserEntity buyer;
 
+	public FeedbackEntity(String review, Integer rating, UserEntity seller, UserEntity buyer) {
+		super();
+		this.review = review;
+		this.rating = rating;
+		this.seller = seller;
+		this.buyer = buyer;
+	}
+	
+	
 }

@@ -33,8 +33,9 @@ public class UserController {
 	}
 
 	@PutMapping("/user/{userId}")
-	public String updateGenre(@RequestBody String json) throws JsonMappingException, JsonProcessingException {
-		return userService.updateUser(json);
+	public String updateGenre(@RequestBody String json, @PathVariable Integer userId)
+			throws JsonMappingException, JsonProcessingException {
+		return userService.updateUser(json, userId);
 	}
 
 	@DeleteMapping("/user/{userId}")

@@ -7,4 +7,8 @@ public class RoleNotFoundException extends RuntimeException {
 	public RoleNotFoundException(Integer roleId) {
 		super("Could not found the role with role id: " + roleId + ".");
 	}
+
+	public RoleNotFoundException(String roleName) {
+		super("Could not found the role with role name: " + roleName + ".");
+	}
 }

@@ -33,20 +33,17 @@ public class UserEntity {
 	@OneToMany(mappedBy = "user")
 	private List<AddressEntity> address;
 
-	@OneToMany(mappedBy = "user")
-	private List<ItemAuctionEntity> itemauctions;
+	@OneToMany(mappedBy = "seller")
+	private List<ItemAuctionEntity> itemAuctions;
 
-	@OneToMany(mappedBy = "user")
-	private List<FeedbackEntity> feedbacks;
+	@OneToMany(mappedBy = "seller")
+	private List<FeedbackEntity> feedbackSellers;
 
-	@OneToMany(mappedBy = "user")
-	private List<FeedbackEntity> _feedbacks;
+	@OneToMany(mappedBy = "buyer")
+	private List<FeedbackEntity> feedbackBuyers;
 
 	@OneToMany(mappedBy = "user")
 	private List<BidEntity> bids;
-
-	@OneToMany(mappedBy = "user")
-	private List<BidWinnerEntity> bidWinners;
 
 	public UserEntity(String userName, String phone, String email) {
 		super();

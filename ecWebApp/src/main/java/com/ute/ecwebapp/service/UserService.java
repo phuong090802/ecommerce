@@ -13,7 +13,7 @@ public interface UserService {
 
 	UserDto getUserById(Integer userId);
 
-	String updateUser(String json) throws JsonMappingException, JsonProcessingException;
+	String updateUser(String json, Integer userId) throws JsonMappingException, JsonProcessingException;
 
 	String deleteUser(Integer userId);
 }

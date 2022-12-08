@@ -19,10 +19,8 @@ public class AddressServiceImpl implements AddressService {
 	private AddressRepository addressRepository;
 
 	@Override
-	public void createAddress(UserDto userDto, UserEntity userEntity) {
-		addressRepository.saveAll(userDto.getAddress().stream()
-				.map(address -> new AddressEntity(address.getFullAddress(), address.getState(), userEntity))
-				.collect(Collectors.toList()));
+	public void createAddress(List<AddressEntity> listAddressEntity) {
+		addressRepository.saveAll(listAddressEntity);
 	}
 
 	@Override

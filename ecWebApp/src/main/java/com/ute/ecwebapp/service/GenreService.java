@@ -16,6 +16,8 @@ public interface GenreService {
 	String deleteGenre(Integer genreId);
 	
 	GenreDto getGenreByName(String genreName);
+
+	List<GenreDto> getLikeGenreByName(String genreName);
 	
 	
 }

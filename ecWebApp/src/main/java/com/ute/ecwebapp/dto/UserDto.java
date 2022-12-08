@@ -21,11 +21,11 @@ public class UserDto {
 
 	private List<AddressDto> address;
 
-	private List<ItemAuctionDto> itemauctions;
+	private List<ItemAuctionDto> itemAuctions;
 
-	private List<FeedbackDto> feedbacks;
+	private List<FeedbackDto> feedbackSellers;
 
-	private List<FeedbackDto> _feedbacks;
+	private List<FeedbackDto> feedbackBuyers;
 
 	private List<BidDto> bids;
 

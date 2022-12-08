@@ -11,6 +11,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.ute.ecwebapp.dto.UserDto;
 import com.ute.ecwebapp.entity.*;
+import com.ute.ecwebapp.enums.Role;
 import com.ute.ecwebapp.exception.UserNotFoundException;
 import com.ute.ecwebapp.repository.*;
 import com.ute.ecwebapp.service.AccountService;
@@ -18,12 +19,10 @@ import com.ute.ecwebapp.service.AddressService;
 import com.ute.ecwebapp.service.RoleService;
 import com.ute.ecwebapp.service.UserService;
 import com.ute.ecwebapp.util.DtoMapper;
-import com.ute.ecwebapp.util.ListEntityToDto;
+import com.ute.ecwebapp.util.ConvertListAdress;
 
 @Service
 public class UserServiceImpl implements UserService {
-
-	private final int roleNA = 3;
 
 	@Autowired
 	private UserRepository userRepository;
@@ -38,7 +37,7 @@ public class UserServiceImpl implements UserService {
 	private AccountService accountService;
 
 	@Autowired
-	private ListEntityToDto mapEntityToDto;
+	private ConvertListAdress convertListAdress;
 
 	@Autowired
 	private RoleService roleService;
@@ -47,44 +46,52 @@ public class UserServiceImpl implements UserService {
 	public String createAccount(String json) throws JsonMappingException, JsonProcessingException {
 		var userDto = dtoMapper.convertToUserDto(json);
 		var accountName = userDto.getAccount().getAccountName();
-		if (accountService.accountNameExist(accountName)) {
-			return "Account name: " + accountName + " has already existed.";
-		} else {
-			saveAll(userDto);
+		if (!accountName.isEmpty()) {
+			if (accountService.accountNameExist(accountName)) {
+				return "Account name: " + accountName + " has already existed.";
+			} else {
+				var userEntity = new UserEntity();
+				BeanUtils.copyProperties(userDto, userEntity);
+				AccountEntity accountEntity = new AccountEntity();
+				BeanUtils.copyProperties(userDto.getAccount(), accountEntity);
+				accountEntity.setRole(roleService.getByName(Role.USER.toString()));
+				accountEntity.setUser(userEntity);
+				userRepository.save(userEntity);
+				if (userDto.getAddress().isEmpty()) {
+					addressService
+							.createAddress(convertListAdress.convertToAddressEntity(userDto.getAddress(), userEntity));
+				}
+				accountService.createAccount(accountEntity);
+			}
+			return json;
 		}
-		return json;
-	}
-
-	public void saveAll(UserDto userDto) {
-		var userEntity = new UserEntity();
-		BeanUtils.copyProperties(userDto, userEntity);
-		userRepository.save(userEntity);
-		addressService.createAddress(userDto, userEntity);
-		accountService.createAccount(userDto, userEntity);
+		return "Account name is empty.";
 	}
 
 	@Override
 	public List<UserDto> getAllUsers() {
 		return userRepository
 				.findAll().stream().map(user -> new UserDto(user.getUserId(), user.getUserName(), user.getEmail(),
-						user.getPhone(), mapEntityToDto.convertAddressDto(user.getAddress())))
+						user.getPhone(), convertListAdress.convertToAddressDto(user.getAddress())))
 				.collect(Collectors.toList());
 	}
 
 	@Override
 	public UserDto getUserById(Integer userId) {
-		UserEntity userEntity = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
-		UserDto userDto = new UserDto();
+		var userEntity = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+		var userDto = new UserDto();
 		BeanUtils.copyProperties(userEntity, userDto);
-		userDto.setAddress(mapEntityToDto.convertAddressDto(userEntity.getAddress()));
+		userDto.setAddress(convertListAdress.convertToAddressDto(userEntity.getAddress()));
 		return userDto;
 	}
 
 	@Override
-	public String updateUser(String json) throws JsonMappingException, JsonProcessingException {
+	public String updateUser(String json, Integer userId) throws JsonMappingException, JsonProcessingException {
 		var userDto = dtoMapper.convertToUserDto(json);
-		UserEntity userEntity = new UserEntity();
-		BeanUtils.copyProperties(userDto, userEntity);
+		var userEntity = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+		userEntity.setUserName(userDto.getUserName());
+		userEntity.setPhone(userDto.getPhone());
+		userEntity.setAddress(convertListAdress.convertToAddressEntity(userDto.getAddress(), userEntity));
 		userRepository.save(userEntity);
 		addressService.updateAddress(userDto, userEntity);
 		return json;
@@ -95,10 +102,10 @@ public class UserServiceImpl implements UserService {
 		if (!userRepository.existsById(userId)) {
 			throw new UserNotFoundException(userId);
 		}
-		UserEntity userEntity = new UserEntity();
+		var userEntity = new UserEntity();
 		BeanUtils.copyProperties(getUserById(userId), userEntity);
-		AccountEntity accountEntity = accountService.getByUser(userEntity);
-		accountEntity.setRole(roleService.getById(roleNA));
+		var accountEntity = accountService.getByUser(userEntity);
+		accountEntity.setRole(null);
 		accountService.updateAccount(accountEntity);
 		return "User with user id: " + userId + " has been removed USER role.";
 	}

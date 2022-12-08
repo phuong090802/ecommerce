@@ -21,7 +21,7 @@ public class GenreServiceImpl implements GenreService {
 
 	@Override
 	public GenreDto createGenre(GenreDto genreDto) {
-		GenreEntity genreEntity = new GenreEntity();
+		var genreEntity = new GenreEntity();
 		BeanUtils.copyProperties(genreDto, genreEntity);
 		genreRepository.save(genreEntity);
 		return genreDto;
@@ -35,8 +35,7 @@ public class GenreServiceImpl implements GenreService {
 
 	@Override
 	public GenreDto getGenreById(Integer genreId) {
-		GenreEntity genreEntity = genreRepository.findById(genreId)
-				.orElseThrow(() -> new GenreNotFoundException(genreId));
+		var genreEntity = genreRepository.findById(genreId).orElseThrow(() -> new GenreNotFoundException(genreId));
 		GenreDto genreDto = new GenreDto();
 		BeanUtils.copyProperties(genreEntity, genreDto);
 		return genreDto;
@@ -44,8 +43,7 @@ public class GenreServiceImpl implements GenreService {
 
 	@Override
 	public GenreDto updateGenre(GenreDto genreDto, Integer genreId) {
-		GenreEntity genreEntity = genreRepository.findById(genreId)
-				.orElseThrow(() -> new GenreNotFoundException(genreId));
+		var genreEntity = genreRepository.findById(genreId).orElseThrow(() -> new GenreNotFoundException(genreId));
 		genreEntity.setGenreName(genreDto.getGenreName());
 		genreRepository.save(genreEntity);
 		return genreDto;
@@ -59,13 +57,19 @@ public class GenreServiceImpl implements GenreService {
 		genreRepository.deleteById(genreId);
 		return "Genre with genre id: " + genreId + " has been deleted success.";
 	}
-	
+
 	@Override
 	public GenreDto getGenreByName(String genreName) {
-		GenreEntity genreEntity = genreRepository.findBygenreName(genreName)
+		var genreEntity = genreRepository.findBygenreName(genreName)
 				.orElseThrow(() -> new GenreNotFoundException(genreName));
-		GenreDto genreDto = new GenreDto();
+		var genreDto = new GenreDto();
 		BeanUtils.copyProperties(genreEntity, genreDto);
 		return genreDto;
+	}
+
+	@Override
+	public List<GenreDto> getLikeGenreByName(String genreName) {
+		return genreRepository.findBygenreNameContaining(genreName).stream()
+				.map(genre -> new GenreDto(genre.getGenreId(), genre.getGenreName())).collect(Collectors.toList());
 	}
 }

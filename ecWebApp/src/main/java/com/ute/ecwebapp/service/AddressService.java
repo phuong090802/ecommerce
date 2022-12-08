@@ -7,7 +7,7 @@ import com.ute.ecwebapp.entity.AddressEntity;
 import com.ute.ecwebapp.entity.UserEntity;
 
 public interface AddressService {
-	void createAddress(UserDto userDto, UserEntity userEntity);
+	void createAddress(List<AddressEntity> listAddressEntity);
 
 	List<AddressEntity> getAllByuser(UserEntity user);
 	

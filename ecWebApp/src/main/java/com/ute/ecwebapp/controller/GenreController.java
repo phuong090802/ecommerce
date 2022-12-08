@@ -41,8 +41,7 @@ public class GenreController {
 	}
 
 	@GetMapping("/genre/search/{genreName}")
-	public GenreDto getGenreByName(@PathVariable String genreName) {
-		System.out.println(genreName);
-		return genreService.getGenreByName(genreName);
+	public List<GenreDto> getGenreByName(@PathVariable String genreName) {
+		return genreService.getLikeGenreByName(genreName);
 	}
 }
