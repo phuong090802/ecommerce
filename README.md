@@ -1,5 +1,6 @@
 Đã thực hiện:
 - Tất cả các bảng.
+-----------------------------
 Còn phần:
  - Paypal sandbox.
 - Spring security, password encryption, login.
