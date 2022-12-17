@@ -23,7 +23,7 @@ public class AccountEntity {
 	private String password;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "user_id", referencedColumnName = "user_id")
+	@JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
 	private UserEntity user;
 
 	@ManyToOne(cascade = CascadeType.ALL)

@@ -1,5 +1,6 @@
 package com.ute.ecwebapp.dto;
 
+import javax.validation.constraints.*;
 
 import lombok.*;
 
@@ -8,12 +9,16 @@ import lombok.*;
 @NoArgsConstructor
 public class AddressDto {
 
+	@Null
 	private Integer addressId;
 
+	@Null
 	private String fullAddress;
 
+	@Null
 	private String state;
 
+	@NotNull
 	private UserDto user;
 
 	public AddressDto(String fullAddress, String state, UserDto user) {
@@ -29,6 +34,5 @@ public class AddressDto {
 		this.fullAddress = fullAddress;
 		this.state = state;
 	}
-	
-	
+
 }

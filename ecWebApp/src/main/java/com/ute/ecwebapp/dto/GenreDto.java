@@ -2,16 +2,21 @@ package com.ute.ecwebapp.dto;
 
 import java.util.List;
 
+import javax.validation.constraints.*;
+
 import lombok.*;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class GenreDto {
+	@Null
 	private Integer genreId;
 
+	@NotNull
 	private String genreName;
-	
+
+	@Null
 	private List<ItemAuctionDto> itemAuctions;
 
 	public GenreDto(String genreName) {
@@ -24,6 +29,5 @@ public class GenreDto {
 		this.genreId = genreId;
 		this.genreName = genreName;
 	}
-	
-	
+
 }

@@ -2,6 +2,8 @@ package com.ute.ecwebapp.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +18,7 @@ public class GenreController {
 	private GenreService genreService;
 
 	@PostMapping("/genre")
-	public GenreDto createGenre(@RequestBody GenreDto genreDto) {
+	public GenreDto createGenre(@Valid @RequestBody GenreDto genreDto) {
 		return genreService.createGenre(genreDto);
 	}
 
@@ -31,7 +33,7 @@ public class GenreController {
 	}
 
 	@PutMapping("/genre/{genreId}")
-	public GenreDto updateGenre(@RequestBody GenreDto genreDto, @PathVariable Integer genreId) {
+	public GenreDto updateGenre(@Valid @RequestBody GenreDto genreDto, @PathVariable Integer genreId) {
 		return genreService.updateGenre(genreDto, genreId);
 	}
 
