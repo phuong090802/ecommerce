@@ -1,9 +1,11 @@
 package com.ute.ecwebapp.service.impl;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ import com.ute.ecwebapp.service.AddressService;
 import com.ute.ecwebapp.service.RoleService;
 import com.ute.ecwebapp.service.UserService;
 import com.ute.ecwebapp.util.DtoMapper;
+import com.ute.ecwebapp.util.ValidationUtil;
 import com.ute.ecwebapp.util.ConvertListAddress;
 
 @Service
@@ -46,11 +49,15 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+	@Autowired
+	private ValidationUtil validationUtil;
+
 	@Override
-	public void createAccount(String json) throws JsonMappingException, JsonProcessingException {
+	public void createAccount(String json) throws BeansException, IOException, InterruptedException {
 		var userDto = dtoMapper.convertToUserDto(json);
 		var accountName = userDto.getAccount().getAccountName();
-		if (!accountName.isEmpty()) {
+		if (!accountName.isEmpty() && validationUtil.validationEmail(userDto.getEmail())
+				&& validationUtil.validationPhone(userDto.getPhone())) {
 			if (accountService.accountNameExist(accountName)) {
 				throw new BadRequestException("Account name: " + accountName + " has already existed.");
 			} else {

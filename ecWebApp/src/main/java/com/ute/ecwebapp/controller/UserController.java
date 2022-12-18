@@ -1,7 +1,9 @@
 package com.ute.ecwebapp.controller;
 
+import java.io.IOException;
 import java.util.List;
 
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +23,8 @@ public class UserController {
 	private UserService userService;
 
 	@PostMapping("/user")
-	public ResponseEntity<?> createUser(@RequestBody String json) throws JsonMappingException, JsonProcessingException {
+	public ResponseEntity<?> createUser(@RequestBody String json)
+			throws BeansException, IOException, InterruptedException {
 		userService.createAccount(json);
 		return new ResponseEntity<>(ResponseDTO.builder().responseMessage("Register account successfully.").build(),
 				HttpStatus.CREATED);
