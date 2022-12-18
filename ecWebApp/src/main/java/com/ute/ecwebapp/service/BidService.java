@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 public interface BidService {
 
-	String createBid(String json) throws JsonMappingException, JsonProcessingException;
+	void createBid(String json) throws JsonMappingException, JsonProcessingException;
 
-	String updateBid(String json, Integer id) throws JsonMappingException, JsonProcessingException;
+	void updateBid(String json, Integer id) throws JsonMappingException, JsonProcessingException;
 
 }

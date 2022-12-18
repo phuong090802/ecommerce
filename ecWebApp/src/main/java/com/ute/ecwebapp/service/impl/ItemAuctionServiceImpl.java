@@ -18,7 +18,7 @@ import com.ute.ecwebapp.dto.UserDto;
 import com.ute.ecwebapp.entity.GenreEntity;
 import com.ute.ecwebapp.entity.ItemAuctionEntity;
 import com.ute.ecwebapp.entity.UserEntity;
-import com.ute.ecwebapp.exception.ItemActionNotFoundException;
+import com.ute.ecwebapp.exception.BadRequestException;
 import com.ute.ecwebapp.repository.ItemAuctionRepository;
 import com.ute.ecwebapp.service.GenreService;
 import com.ute.ecwebapp.service.ItemAuctionService;
@@ -41,7 +41,7 @@ public class ItemAuctionServiceImpl implements ItemAuctionService {
 	private UserService userService;
 
 	@Override
-	public String createItemAuction(String json, MultipartFile multipartFile)
+	public void createItemAuction(String json, MultipartFile multipartFile)
 			throws IllegalStateException, JsonMappingException, JsonProcessingException, IOException {
 		var itemAuctionEntity = new ItemAuctionEntity();
 		var itemAuctionDto = dtoMapper.covertToItemAuctionDto(json);
@@ -63,9 +63,10 @@ public class ItemAuctionServiceImpl implements ItemAuctionService {
 			itemAuctionEntity.setPhotoData(multipartFile.getBytes());
 			itemAuctionEntity.setType(multipartFile.getContentType());
 			itemAuctionRepository.save(itemAuctionEntity);
-			return json;
+
+		} else {
+			throw new BadRequestException("Inappropriate File Type or Format");
 		}
-		return "Inappropriate File Type or Format";
 	}
 
 	@Override
@@ -90,19 +91,18 @@ public class ItemAuctionServiceImpl implements ItemAuctionService {
 
 	@Override
 	public ItemAuctionDto getItemAuctionById(Integer itemAuctionId) {
-		var itemAuctionEntity = itemAuctionRepository.findById(itemAuctionId)
-				.orElseThrow(() -> new ItemActionNotFoundException(itemAuctionId));
+		var itemAuctionEntity = itemAuctionRepository.findById(itemAuctionId).orElseThrow(() -> new BadRequestException(
+				"Could not found the item auction with item auction id: " + itemAuctionId + "."));
 		var itemAuctionDto = new ItemAuctionDto();
 		BeanUtils.copyProperties(itemAuctionEntity, itemAuctionDto);
 		return itemAuctionDto;
 	}
 
 	@Override
-	public String updateItemAuction(String json, Integer itemAuctionId, MultipartFile multipartFile)
-			throws IOException {
+	public void updateItemAuction(String json, Integer itemAuctionId, MultipartFile multipartFile) throws IOException {
 		var itemAuctionDto = dtoMapper.covertToItemAuctionDto(json);
-		var itemAuctionEntity = itemAuctionRepository.findById(itemAuctionId)
-				.orElseThrow(() -> new ItemActionNotFoundException(itemAuctionId));
+		var itemAuctionEntity = itemAuctionRepository.findById(itemAuctionId).orElseThrow(() -> new BadRequestException(
+				"Could not found the item auction with item auction id: " + itemAuctionId + "."));
 		var genreEntity = new GenreEntity();
 		var sellerEntity = new UserEntity();
 		BeanUtils.copyProperties(itemAuctionDto, itemAuctionEntity);
@@ -129,19 +129,19 @@ public class ItemAuctionServiceImpl implements ItemAuctionService {
 			itemAuctionEntity.setPhotoData(multipartFile.getBytes());
 			itemAuctionEntity.setType(multipartFile.getContentType());
 			itemAuctionRepository.save(itemAuctionEntity);
-			return json;
 
+		} else {
+			throw new BadRequestException("Inappropriate File Type or Format");
 		}
-		return "Inappropriate File Type or Format";
 	}
 
 	@Override
-	public String deleteItemAuction(Integer itemAuctionId) {
+	public void deleteItemAuction(Integer itemAuctionId) {
 		if (!itemAuctionRepository.existsById(itemAuctionId)) {
-			throw new ItemActionNotFoundException(itemAuctionId);
+			throw new BadRequestException(
+					"Could not found the item auction with item auction id: " + itemAuctionId + ".");
 		}
 		itemAuctionRepository.deleteById(itemAuctionId);
-		return "Item auction with genre item auction id: " + itemAuctionId + " has been deleted success.";
 	}
 
 	@Override

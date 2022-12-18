@@ -8,7 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.ute.ecwebapp.entity.FeedbackEntity;
 import com.ute.ecwebapp.entity.UserEntity;
-import com.ute.ecwebapp.exception.FeedbackNotFoundException;
+import com.ute.ecwebapp.exception.BadRequestException;
 import com.ute.ecwebapp.repository.FeedbackRepository;
 import com.ute.ecwebapp.service.FeedbackService;
 import com.ute.ecwebapp.service.UserService;
@@ -27,7 +27,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 	private UserService userService;
 
 	@Override
-	public String createFeedback(String json) throws JsonMappingException, JsonProcessingException {
+	public void createFeedback(String json) throws JsonMappingException, JsonProcessingException {
 		var feedbackEntity = new FeedbackEntity();
 		var feedbackDto = dtoMapper.convertToFeedbackDto(json);
 		if (feedbackDto.getRating() <= 5 && feedbackDto.getRating() >= 1) {
@@ -41,15 +41,15 @@ public class FeedbackServiceImpl implements FeedbackService {
 			feedbackEntity.setSeller(sellerEntity);
 			feedbackEntity.setBuyer(buyerEntity);
 			feedbackRepository.save(feedbackEntity);
-			return json;
+		} else {
+			throw new BadRequestException("Rating not between 1 and 5.");
 		}
-		return "Rating not between 1 and 5";
 	}
 
 	@Override
-	public String updateFeedback(String json, Integer feedbackId) throws JsonMappingException, JsonProcessingException {
-		var feedbackEntity = feedbackRepository.findById(feedbackId)
-				.orElseThrow(() -> new FeedbackNotFoundException(feedbackId));
+	public void updateFeedback(String json, Integer feedbackId) throws JsonMappingException, JsonProcessingException {
+		var feedbackEntity = feedbackRepository.findById(feedbackId).orElseThrow(
+				() -> new BadRequestException("Could not found the feedback with feedback id: " + feedbackId + "."));
 		var feedbackDto = dtoMapper.convertToFeedbackDto(json);
 		if (feedbackDto.getRating() <= 5 && feedbackDto.getRating() >= 1) {
 			var sellerEntity = new UserEntity();
@@ -63,8 +63,8 @@ public class FeedbackServiceImpl implements FeedbackService {
 			feedbackEntity.setSeller(sellerEntity);
 			feedbackEntity.setBuyer(buyerEntity);
 			feedbackRepository.save(feedbackEntity);
-			return json;
+		} else {
+			throw new BadRequestException("Rating not between 1 and 5.");
 		}
-		return "Rating not between 1 and 5";
 	}
 }

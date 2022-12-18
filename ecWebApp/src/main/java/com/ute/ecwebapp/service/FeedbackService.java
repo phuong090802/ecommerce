@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 public interface FeedbackService {
 
-	String createFeedback(String json) throws JsonMappingException, JsonProcessingException;
+	void createFeedback(String json) throws JsonMappingException, JsonProcessingException;
 
-	String updateFeedback(String json, Integer feedbackId) throws JsonMappingException, JsonProcessingException;
+	void updateFeedback(String json, Integer feedbackId) throws JsonMappingException, JsonProcessingException;
 
 }

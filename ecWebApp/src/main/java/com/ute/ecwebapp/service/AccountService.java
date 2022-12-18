@@ -1,5 +1,6 @@
 package com.ute.ecwebapp.service;
 
+import com.ute.ecwebapp.dto.LoginDto;
 import com.ute.ecwebapp.entity.AccountEntity;
 import com.ute.ecwebapp.entity.UserEntity;
 
@@ -11,4 +12,6 @@ public interface AccountService {
 	AccountEntity getByUser(UserEntity userEntity);
 
 	void updateAccount(AccountEntity accountEntity);
+
+	String login(LoginDto loginDto);
 }

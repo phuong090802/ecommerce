@@ -11,7 +11,7 @@ import com.ute.ecwebapp.dto.ItemAuctionDto;
 import com.ute.ecwebapp.entity.ItemAuctionEntity;
 
 public interface ItemAuctionService {
-	String createItemAuction(String json, MultipartFile multipartFile)
+	void createItemAuction(String json, MultipartFile multipartFile)
 			throws IllegalStateException, JsonMappingException, JsonProcessingException, IOException;
 
 	ItemAuctionEntity findByphoto(String photoName);
@@ -20,10 +20,10 @@ public interface ItemAuctionService {
 
 	ItemAuctionDto getItemAuctionById(Integer itemAuctionId);
 
-	String updateItemAuction(String json, Integer itemAuctionId, MultipartFile multipartFile)
+	void updateItemAuction(String json, Integer itemAuctionId, MultipartFile multipartFile)
 			throws JsonMappingException, JsonProcessingException, IOException;
 
-	String deleteItemAuction(Integer itemAuctionId);
+	void deleteItemAuction(Integer itemAuctionId);
 
 	List<ItemAuctionDto> getAllGenreTitle(String title);
 }

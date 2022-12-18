@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.ute.ecwebapp.entity.BidEntity;
 import com.ute.ecwebapp.entity.ItemAuctionEntity;
 import com.ute.ecwebapp.entity.UserEntity;
-import com.ute.ecwebapp.exception.BidNotFoundException;
+import com.ute.ecwebapp.exception.BadRequestException;
 import com.ute.ecwebapp.repository.BidRepository;
 import com.ute.ecwebapp.service.BidService;
 import com.ute.ecwebapp.service.ItemAuctionService;
@@ -32,7 +32,7 @@ public class BidServiceImpl implements BidService {
 	private UserService userService;
 
 	@Override
-	public String createBid(String json) throws JsonMappingException, JsonProcessingException {
+	public void createBid(String json) throws JsonMappingException, JsonProcessingException {
 		var bidEntity = new BidEntity();
 		var buyerEntity = new UserEntity();
 		var itemAuctionEntity = new ItemAuctionEntity();
@@ -45,12 +45,12 @@ public class BidServiceImpl implements BidService {
 		bidEntity.setItemAuction(itemAuctionEntity);
 		bidEntity.setUser(buyerEntity);
 		bidRepository.save(bidEntity);
-		return json;
 	}
 
 	@Override
-	public String updateBid(String json, Integer id) throws JsonMappingException, JsonProcessingException {
-		var bidEntity = bidRepository.findById(id).orElseThrow(() -> new BidNotFoundException(id));
+	public void updateBid(String json, Integer id) throws JsonMappingException, JsonProcessingException {
+		var bidEntity = bidRepository.findById(id)
+				.orElseThrow(() -> new BadRequestException("Could not found the account with Bid:" + id + "."));
 		var buyerEntity = new UserEntity();
 		var itemAuctionEntity = new ItemAuctionEntity();
 		var bidDto = dtoMapper.convertToBidDto(json);
@@ -64,6 +64,5 @@ public class BidServiceImpl implements BidService {
 		bidEntity.setValue(bidDto.getValue());
 		bidEntity.setStatus(bidDto.getStatus());
 		bidRepository.save(bidEntity);
-		return json;
 	}
 }

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.ute.ecwebapp.dto.GenreDto;
 import com.ute.ecwebapp.entity.GenreEntity;
-import com.ute.ecwebapp.exception.GenreNotFoundException;
+import com.ute.ecwebapp.exception.BadRequestException;
 import com.ute.ecwebapp.repository.GenreRepository;
 import com.ute.ecwebapp.service.GenreService;
 
@@ -20,11 +20,10 @@ public class GenreServiceImpl implements GenreService {
 	private GenreRepository genreRepository;
 
 	@Override
-	public GenreDto createGenre(GenreDto genreDto) {
+	public void createGenre(GenreDto genreDto) {
 		var genreEntity = new GenreEntity();
 		BeanUtils.copyProperties(genreDto, genreEntity);
 		genreRepository.save(genreEntity);
-		return genreDto;
 	}
 
 	@Override
@@ -35,33 +34,33 @@ public class GenreServiceImpl implements GenreService {
 
 	@Override
 	public GenreDto getGenreById(Integer genreId) {
-		var genreEntity = genreRepository.findById(genreId).orElseThrow(() -> new GenreNotFoundException(genreId));
+		var genreEntity = genreRepository.findById(genreId).orElseThrow(
+				() -> new BadRequestException("Could not found the genre with genre id: " + genreId + "."));
 		GenreDto genreDto = new GenreDto();
 		BeanUtils.copyProperties(genreEntity, genreDto);
 		return genreDto;
 	}
 
 	@Override
-	public GenreDto updateGenre(GenreDto genreDto, Integer genreId) {
-		var genreEntity = genreRepository.findById(genreId).orElseThrow(() -> new GenreNotFoundException(genreId));
+	public void updateGenre(GenreDto genreDto, Integer genreId) {
+		var genreEntity = genreRepository.findById(genreId).orElseThrow(
+				() -> new BadRequestException("Could not found the genre with genre id: " + genreId + "."));
 		genreEntity.setGenreName(genreDto.getGenreName());
 		genreRepository.save(genreEntity);
-		return genreDto;
 	}
 
 	@Override
-	public String deleteGenre(Integer genreId) {
+	public void deleteGenre(Integer genreId) {
 		if (!genreRepository.existsById(genreId)) {
-			throw new GenreNotFoundException(genreId);
+			throw new BadRequestException("Could not found the genre with genre id: " + genreId + ".");
 		}
 		genreRepository.deleteById(genreId);
-		return "Genre with genre id: " + genreId + " has been deleted success.";
 	}
 
 	@Override
 	public GenreDto getGenreByName(String genreName) {
-		var genreEntity = genreRepository.findBygenreName(genreName)
-				.orElseThrow(() -> new GenreNotFoundException(genreName));
+		var genreEntity = genreRepository.findBygenreName(genreName).orElseThrow(
+				() -> new BadRequestException("Could not found the genre with genre name: " + genreName + "."));
 		var genreDto = new GenreDto();
 		BeanUtils.copyProperties(genreEntity, genreDto);
 		return genreDto;

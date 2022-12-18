@@ -10,7 +10,7 @@ import com.ute.ecwebapp.entity.AddressEntity;
 import com.ute.ecwebapp.entity.UserEntity;
 
 @Service
-public class ConvertListAdress {
+public class ConvertListAddress {
 	public List<AddressDto> convertToAddressDto(List<AddressEntity> listAddressEntity) {
 		return listAddressEntity.stream()
 				.map(address -> new AddressDto(address.getAddressId(), address.getFullAddress(), address.getState()))

@@ -32,7 +32,7 @@ public class BidWinnerServiceImpl implements BidWinnerService {
 	private DtoMapper dtoMapper;
 
 	@Override
-	public String createBidWinner(String json) throws JsonMappingException, JsonProcessingException {
+	public void createBidWinner(String json) throws JsonMappingException, JsonProcessingException {
 		var bidWinnerEntity = new BidWinnerEntity();
 		var bidWinnerDto = dtoMapper.convertToBidWinnerDto(json);
 		BeanUtils.copyProperties(bidWinnerDto, bidWinnerEntity);
@@ -47,11 +47,10 @@ public class BidWinnerServiceImpl implements BidWinnerService {
 		bidWinnerEntityId.setBuyer(buyer);
 		bidWinnerEntity.setBidWinnerId(bidWinnerEntityId);
 		bidWinnerRepository.save(bidWinnerEntity);
-		return json;
 	}
 
 	@Override
-	public String updateBidWinner(String json, Integer id) throws JsonMappingException, JsonProcessingException {
+	public void updateBidWinner(String json, Integer id) throws JsonMappingException, JsonProcessingException {
 		var bidWinnerEntity = new BidWinnerEntity();
 		var bidWinnerDto = dtoMapper.convertToBidWinnerDto(json);
 		bidWinnerEntity.setShipCost(bidWinnerDto.getShipCost());
@@ -67,6 +66,5 @@ public class BidWinnerServiceImpl implements BidWinnerService {
 		bidWinnerEntityId.setBuyer(buyer);
 		bidWinnerEntity.setBidWinnerId(bidWinnerEntityId);
 		bidWinnerRepository.save(bidWinnerEntity);
-		return json;
 	}
 }

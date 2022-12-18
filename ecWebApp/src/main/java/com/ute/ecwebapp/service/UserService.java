@@ -7,13 +7,14 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.ute.ecwebapp.dto.UserDto;
 
 public interface UserService {
-	String createAccount(String json) throws JsonMappingException, JsonProcessingException;
+	void createAccount(String json) throws JsonMappingException, JsonProcessingException;
 
 	List<UserDto> getAllUsers();
 
 	UserDto getUserById(Integer userId);
 
-	String updateUser(String json, Integer userId) throws JsonMappingException, JsonProcessingException;
+	void updateUser(String json, Integer userId) throws JsonMappingException, JsonProcessingException;
 
-	String deleteUser(Integer userId);
+	void deleteUser(Integer userId);
+
 }
