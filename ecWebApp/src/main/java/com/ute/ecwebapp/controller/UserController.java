@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -26,16 +27,19 @@ public class UserController {
 				HttpStatus.CREATED);
 	}
 
+	@PreAuthorize("hasAuthority('ADMIN')")
 	@GetMapping("/users")
 	public ResponseEntity<?> getAllUsers() {
 		return new ResponseEntity<List<UserDto>>(userService.getAllUsers(), HttpStatus.OK);
 	}
 
+	@PreAuthorize("hasAuthority('ADMIN')")
 	@GetMapping("/user/{userId}")
 	public ResponseEntity<?> getGenreById(@PathVariable Integer userId) {
 		return new ResponseEntity<UserDto>(userService.getUserById(userId), HttpStatus.OK);
 	}
 
+	@PreAuthorize("hasAuthority('ADMIN')")
 	@PutMapping("/user/{userId}")
 	public ResponseEntity<?> updateGenre(@RequestBody String json, @PathVariable Integer userId)
 			throws JsonMappingException, JsonProcessingException {

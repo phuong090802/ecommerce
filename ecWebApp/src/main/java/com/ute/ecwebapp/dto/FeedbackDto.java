@@ -10,7 +10,7 @@ import lombok.*;
 public class FeedbackDto {
 
 	@Null
-	private Integer feadBackId;
+	private Integer feedBackId;
 
 	@Null
 	private String review;

@@ -17,7 +17,7 @@ public class FeedbackEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "feedback_id")
-	private Integer feadBackId;
+	private Integer feedBackId;
 	
 	private String review;
 

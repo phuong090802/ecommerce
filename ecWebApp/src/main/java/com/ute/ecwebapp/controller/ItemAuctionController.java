@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -20,7 +21,8 @@ public class ItemAuctionController {
 
 	@Autowired
 	private ItemAuctionService itemAuctionService;
-
+	
+	@PreAuthorize("hasAuthority('USER')")
 	@PostMapping("/item-auction")
 	public ResponseEntity<?> createItemAuction(@RequestBody String json,
 			@RequestParam("imageSource") MultipartFile multipartFile) throws IllegalStateException, IOException {
@@ -28,17 +30,20 @@ public class ItemAuctionController {
 		return new ResponseEntity<>(ResponseDTO.builder().responseMessage("Create item auction successfully.").build(),
 				HttpStatus.CREATED);
 	}
-
+	
+	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping("/item-auctions")
 	public ResponseEntity<?> getAllItemAuctions() {
 		return new ResponseEntity<List<ItemAuctionDto>>(itemAuctionService.getAllItemAuctions(), HttpStatus.OK);
-	}
+	}	
 
+	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping("/item-auction/{itemAuctionId}")
 	public ResponseEntity<?> getItemAuctionById(@PathVariable Integer itemAuctionId) {
 		return new ResponseEntity<ItemAuctionDto>(itemAuctionService.getItemAuctionById(itemAuctionId), HttpStatus.OK);
 	}
-
+	
+	@PreAuthorize("hasAuthority('USER')")
 	@PutMapping("/item-auction/{itemAuctionId}")
 	public ResponseEntity<?> updateItemAuction(@RequestBody String json, @PathVariable Integer itemAuctionId,
 			@RequestParam("imageSource") MultipartFile multipartFile)
@@ -47,14 +52,8 @@ public class ItemAuctionController {
 		return new ResponseEntity<>(ResponseDTO.builder().responseMessage("Update item auction successfully.").build(),
 				HttpStatus.OK);
 	}
-
-	@DeleteMapping("/item-auction/{itemAuctionId}")
-	public ResponseEntity<?> deleteGenre(@PathVariable Integer itemAuctionId) {
-		itemAuctionService.deleteItemAuction(itemAuctionId);
-		return new ResponseEntity<>(ResponseDTO.builder().responseMessage("Delete item auction successfully.").build(),
-				HttpStatus.NO_CONTENT);
-	}
-
+	
+	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping("/item-auction/search/{title}")
 	public ResponseEntity<?> getAllGenreTitle(@PathVariable String title) {
 		return new ResponseEntity<List<ItemAuctionDto>>(itemAuctionService.getAllGenreTitle(title), HttpStatus.OK);

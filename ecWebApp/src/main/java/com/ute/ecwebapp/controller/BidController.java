@@ -3,6 +3,7 @@ package com.ute.ecwebapp.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -22,6 +23,7 @@ public class BidController {
 	@Autowired
 	private BidService bidService;
 
+	@PreAuthorize("hasAuthority('USER')")
 	@PostMapping("/bid")
 	public ResponseEntity<?> createBid(@RequestBody String json) throws JsonMappingException, JsonProcessingException {
 		bidService.createBid(json);
@@ -29,6 +31,7 @@ public class BidController {
 				HttpStatus.CREATED);
 	}
 
+	@PreAuthorize("hasAuthority('USER')")
 	@PutMapping("/bid/{id}")
 	public ResponseEntity<?> updateBid(@RequestBody String json, @PathVariable Integer id)
 			throws JsonMappingException, JsonProcessingException {

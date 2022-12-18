@@ -3,6 +3,7 @@ package com.ute.ecwebapp.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -21,7 +22,8 @@ public class FeedbackController {
 
 	@Autowired
 	private FeedbackService feedbackService;
-
+	
+	@PreAuthorize("hasAuthority('USER')")
 	@PostMapping("/feedback")
 	public ResponseEntity<?> createFeedback(@RequestBody String json)
 			throws JsonMappingException, JsonProcessingException {
@@ -29,7 +31,8 @@ public class FeedbackController {
 		return new ResponseEntity<>(ResponseDTO.builder().responseMessage("Create feedback successfully.").build(),
 				HttpStatus.CREATED);
 	}
-
+	
+	@PreAuthorize("hasAuthority('USER')")
 	@PutMapping("/feedback/{feedbackId}")
 	public ResponseEntity<?> updateFeedback(@RequestBody String json, @PathVariable Integer feedbackId)
 			throws JsonMappingException, JsonProcessingException {
