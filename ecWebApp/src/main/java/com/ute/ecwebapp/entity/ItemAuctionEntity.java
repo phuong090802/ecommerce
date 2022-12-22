@@ -1,7 +1,7 @@
 package com.ute.ecwebapp.entity;
 
-import java.sql.Date;
-import java.util.List;
+import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.*;
 
@@ -12,7 +12,8 @@ import lombok.*;
 @Entity
 @Table(name = "item_auction")
 @Check(constraints = "start_date < end_date")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class ItemAuctionEntity {
@@ -41,6 +42,9 @@ public class ItemAuctionEntity {
 
 	@Column(nullable = false, name = "end_date")
 	private Date endDate;
+	
+	@Column(columnDefinition = "TINYINT(1) DEFAULT 0", name = "status")
+	private Boolean status;
 
 	@ManyToOne
 	@JoinColumn(name = "seller_id", nullable = false)
@@ -49,14 +53,15 @@ public class ItemAuctionEntity {
 	@ManyToOne
 	@JoinColumn(name = "genre_id", nullable = false)
 	private GenreEntity genre;
+	
+	@OneToMany(mappedBy = "itemAuction", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<BidEntity> bids;
+	
+	
+	@OneToMany(mappedBy = "itemAuctionEntity", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<PhotoEntity> photos;
 
-	@OneToMany(mappedBy = "itemAuction")
-	private List<BidEntity> bids;
-
-	@OneToMany(mappedBy = "itemAuctionEntity")
-	private List<PhotoEntity> photos;
-
-	public ItemAuctionEntity(String description, String title, List<PhotoEntity> photos, Double startBidAmount,
+	public ItemAuctionEntity(String description, String title, Set<PhotoEntity> photos, Double startBidAmount,
 			Double autoAcceptAmount, Double increment, Date startDate, Date endDate, UserEntity seller,
 			GenreEntity genre) {
 		super();
@@ -72,7 +77,7 @@ public class ItemAuctionEntity {
 		this.genre = genre;
 	}
 
-	public ItemAuctionEntity(Integer itemAuctionId, String description, String title, List<PhotoEntity> photos,
+	public ItemAuctionEntity(Integer itemAuctionId, String description, String title, Set<PhotoEntity> photos,
 			Double startBidAmount, Double autoAcceptAmount, Double increment, Date startDate, Date endDate,
 			UserEntity seller, GenreEntity genre) {
 		super();

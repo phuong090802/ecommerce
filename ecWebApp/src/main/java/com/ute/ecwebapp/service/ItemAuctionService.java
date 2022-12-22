@@ -31,4 +31,5 @@ public interface ItemAuctionService {
 
 	void updateItemAuctionId(ItemAuctionDto itemAuctionDto, Integer genreId);
 
+	List<ItemAuctionEntity> getAllItemAuctionsByStatus();
 }

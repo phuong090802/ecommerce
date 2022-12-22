@@ -1,14 +1,16 @@
 package com.ute.ecwebapp.entity;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.*;
+
 
 import lombok.*;
 
 @Entity
 @Table(name = "user")
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserEntity {
@@ -30,20 +32,22 @@ public class UserEntity {
 	@OneToOne(mappedBy = "user")
 	private AccountEntity account;
 
-	@OneToMany(mappedBy = "user")
-	private List<AddressEntity> address;
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<AddressEntity> address;
 
 	@OneToMany(mappedBy = "seller")
-	private List<ItemAuctionEntity> itemAuctions;
+	private Set<ItemAuctionEntity> itemAuctions;
 
 	@OneToMany(mappedBy = "seller")
-	private List<FeedbackEntity> feedbackSellers;
-
+	private Set<FeedbackEntity> feedbackSellers;
+	
+	
 	@OneToMany(mappedBy = "buyer")
-	private List<FeedbackEntity> feedbackBuyers;
+	private Set<FeedbackEntity> feedbackBuyers;
 
+	
 	@OneToMany(mappedBy = "user")
-	private List<BidEntity> bids;
+	private Set<BidEntity> bids;
 
 	public UserEntity(String fullName, String phone, String email) {
 		super();
@@ -60,7 +64,7 @@ public class UserEntity {
 		this.email = email;
 	}
 
-	public UserEntity(String fullName, String phone, String email, AccountEntity account, List<AddressEntity> address) {
+	public UserEntity(String fullName, String phone, String email, AccountEntity account, Set<AddressEntity> address) {
 		super();
 		this.fullName = fullName;
 		this.phone = phone;
@@ -69,7 +73,7 @@ public class UserEntity {
 		this.address = address;
 	}
 
-	public UserEntity(Integer userId, String fullName, String phone, String email, List<AddressEntity> address) {
+	public UserEntity(Integer userId, String fullName, String phone, String email, Set<AddressEntity> address) {
 		super();
 		this.userId = userId;
 		this.fullName = fullName;

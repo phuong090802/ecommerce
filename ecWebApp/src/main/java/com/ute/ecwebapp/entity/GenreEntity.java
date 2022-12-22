@@ -1,6 +1,6 @@
 package com.ute.ecwebapp.entity;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.*;
 
@@ -10,7 +10,8 @@ import lombok.*;
 
 @Entity
 @Table(name = "genre")
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class GenreEntity {
@@ -22,8 +23,8 @@ public class GenreEntity {
 	@Column(length = 50, nullable = false, name = "genre_name")
 	private String genreName;
 	
-	@OneToMany(mappedBy = "genre")
-	private List<ItemAuctionEntity> itemAuctions;
+	@OneToMany(mappedBy = "genre", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<ItemAuctionEntity> itemAuctions;
 
 	public GenreEntity(String genreName) {
 		super();

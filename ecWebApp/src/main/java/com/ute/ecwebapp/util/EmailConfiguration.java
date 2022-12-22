@@ -7,7 +7,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 
 @Configuration
-@PropertySource(value = "classpath:messages/email.properties", encoding = "UTF-8")
+@PropertySource(value = "classpath:${email.properties}", encoding = "UTF-8")
 public class EmailConfiguration {
 
 	@Autowired

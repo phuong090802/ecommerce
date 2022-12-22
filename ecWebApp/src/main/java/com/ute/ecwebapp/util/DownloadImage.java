@@ -11,6 +11,7 @@ import com.ute.ecwebapp.service.PhotoService;
 
 @RestController
 @RequestMapping("/api/image")
+@CrossOrigin("http://localhost:3000")
 public class DownloadImage {
 
 	@Autowired

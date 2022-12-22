@@ -17,6 +17,7 @@ import com.ute.ecwebapp.service.UserService;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin("http://localhost:3000")
 public class UserController {
 
 	@Autowired
@@ -57,4 +58,5 @@ public class UserController {
 		return new ResponseEntity<>(ResponseDTO.builder().responseMessage("Update password successfully.").build(),
 				HttpStatus.OK);
 	}
+	
 }

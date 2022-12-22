@@ -1,11 +1,18 @@
 package com.ute.ecwebapp.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.ute.ecwebapp.config.Constraint.*;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.ute.ecwebapp.entity.AddressEntity;
 import com.ute.ecwebapp.entity.BidWinnerEntity;
 import com.ute.ecwebapp.entity.BidWinnerEntityId;
 import com.ute.ecwebapp.entity.ItemAuctionEntity;
@@ -14,6 +21,7 @@ import com.ute.ecwebapp.repository.BidWinnerRepository;
 import com.ute.ecwebapp.service.BidWinnerService;
 import com.ute.ecwebapp.service.ItemAuctionService;
 import com.ute.ecwebapp.service.UserService;
+import com.ute.ecwebapp.util.BidWinnerUtil;
 import com.ute.ecwebapp.util.DtoMapper;
 
 @Service
@@ -30,6 +38,9 @@ public class BidWinnerServiceImpl implements BidWinnerService {
 
 	@Autowired
 	private DtoMapper dtoMapper;
+
+	@Autowired
+	private BidWinnerUtil bidWinnerUtil;
 
 	@Override
 	public void createBidWinner(String json) throws JsonMappingException, JsonProcessingException {
@@ -66,5 +77,57 @@ public class BidWinnerServiceImpl implements BidWinnerService {
 		bidWinnerEntityId.setBuyer(buyer);
 		bidWinnerEntity.setBidWinnerId(bidWinnerEntityId);
 		bidWinnerRepository.save(bidWinnerEntity);
+	}
+
+	@Scheduled(fixedRate = 60000, initialDelay = 1000)
+	@Override
+	public void autoUpdateBidWinner() {
+		var bidWinnerEntity = new BidWinnerEntity();
+		var bidWinnerEntityId = new BidWinnerEntityId();
+		List<ItemAuctionEntity> listItemAuction = itemAuctionService.getAllItemAuctionsByStatus();
+		for (var itemAuction : listItemAuction) {
+			if (itemAuction.getEndDate().getTime() < System.currentTimeMillis()) {
+				var sellerEntity = bidWinnerUtil.getSeller(itemAuction);
+				var buyerEntity = bidWinnerUtil.getBuyer(itemAuction);
+				List<AddressEntity> addressBuyer = new ArrayList<>(buyerEntity.getAddress());
+				List<AddressEntity> addressSeller = new ArrayList<>(sellerEntity.getAddress());
+				if (addressBuyer.get(0).getState().matches(addressSeller.get(0).getState())) {
+					bidWinnerEntity.setShipCost(0D);
+				} else if (addressBuyer.get(0).getDegree() == addressSeller.get(0).getDegree()) {
+					bidWinnerEntity.setShipCost(SAME_URBAN);
+				} else if (addressBuyer.get(0).getDegree() > addressSeller.get(0).getDegree()
+						|| addressBuyer.get(0).getDegree() < addressSeller.get(0).getDegree()) {
+					bidWinnerEntity.setShipCost(NOT_THE_SAME_URBAN);
+				}
+				bidWinnerEntityId.setBuyer(buyerEntity);
+				bidWinnerEntityId.setItemAuction(itemAuction);
+				bidWinnerEntity.setValue(bidWinnerUtil.getMaxPrice(new ArrayList<>(itemAuction.getBids())));
+				bidWinnerEntity.setBidWinnerId(bidWinnerEntityId);
+				bidWinnerRepository.save(bidWinnerEntity);
+			}
+			for (var bid : itemAuction.getBids()) {
+				if (bid.getValue() >= itemAuction.getAutoAcceptAmount()) {
+					var sellerEntity = bidWinnerUtil.getSeller(itemAuction);
+					var buyerEntity = bidWinnerUtil.getBuyer(itemAuction);
+					List<AddressEntity> addressBuyer = new ArrayList<>(buyerEntity.getAddress());
+					List<AddressEntity> addressSeller = new ArrayList<>(sellerEntity.getAddress());
+					if (addressBuyer.get(0).getState().matches(addressSeller.get(0).getState())) {
+						bidWinnerEntity.setShipCost(0D);
+					} else if (addressBuyer.get(0).getDegree() == addressSeller.get(0).getDegree()) {
+						bidWinnerEntity.setShipCost(SAME_URBAN);
+					} else if (addressBuyer.get(0).getDegree() > addressSeller.get(0).getDegree()
+							|| addressBuyer.get(0).getDegree() < addressSeller.get(0).getDegree()) {
+						bidWinnerEntity.setShipCost(NOT_THE_SAME_URBAN);
+					}
+
+					bidWinnerEntityId.setBuyer(buyerEntity);
+					bidWinnerEntityId.setItemAuction(itemAuction);
+					bidWinnerEntity.setValue(bid.getValue());
+					bidWinnerEntity.setBidWinnerId(bidWinnerEntityId);
+					bidWinnerRepository.save(bidWinnerEntity);
+				}
+			}
+
+		}
 	}
 }

@@ -26,5 +26,6 @@ public class PhotoDto {
 		this.mime = mime;
 		this.itemAuctionDto = itemAuctionDto;
 	}
-
+	
+	
 }

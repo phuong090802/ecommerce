@@ -23,5 +23,10 @@
     "name": "email.expire",
     "type": "java.lang.String",
     "description": "A description for 'email.expire'"
+  },
+  {
+    "name": "email.properties",
+    "type": "java.lang.String",
+    "description": "A description for 'email.properties'"
   }
 ]}

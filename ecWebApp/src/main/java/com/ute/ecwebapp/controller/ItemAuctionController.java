@@ -19,6 +19,7 @@ import com.ute.ecwebapp.service.ItemAuctionService;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin("http://localhost:3000")
 public class ItemAuctionController {
 
 	@Autowired
@@ -36,13 +37,12 @@ public class ItemAuctionController {
 				HttpStatus.CREATED);
 	}
 
-	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping("/item-auctions")
 	public ResponseEntity<?> getAllItemAuctions() {
+		System.out.println(itemAuctionService.getAllItemAuctions());
 		return new ResponseEntity<List<ItemAuctionDto>>(itemAuctionService.getAllItemAuctions(), HttpStatus.OK);
 	}
 
-	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping("/item-auction/{itemAuctionId}")
 	public ResponseEntity<?> getItemAuctionById(@PathVariable Integer itemAuctionId) {
 		return new ResponseEntity<ItemAuctionDto>(itemAuctionService.getItemAuctionById(itemAuctionId), HttpStatus.OK);
@@ -58,7 +58,6 @@ public class ItemAuctionController {
 				HttpStatus.OK);
 	}
 
-	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping("/item-auction/search/{title}")
 	public ResponseEntity<?> getAllGenreTitle(@PathVariable String title) {
 		return new ResponseEntity<List<ItemAuctionDto>>(itemAuctionService.getAllGenreTitle(title), HttpStatus.OK);

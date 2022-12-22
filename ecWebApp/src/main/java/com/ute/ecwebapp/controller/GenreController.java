@@ -19,6 +19,7 @@ import com.ute.ecwebapp.service.ItemAuctionService;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin("http://localhost:3000")
 public class GenreController {
 
 	@Autowired

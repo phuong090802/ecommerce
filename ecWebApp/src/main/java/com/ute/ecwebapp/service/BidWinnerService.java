@@ -9,4 +9,6 @@ public interface BidWinnerService {
 
 	void updateBidWinner(String json, Integer id) throws JsonMappingException, JsonProcessingException;
 
+	void autoUpdateBidWinner();
+
 }

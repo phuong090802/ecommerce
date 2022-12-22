@@ -1,8 +1,11 @@
 package com.ute.ecwebapp.service.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
@@ -75,7 +78,8 @@ public class ItemAuctionServiceImpl implements ItemAuctionService {
 			photoEntity.setMime(multipartFile.getContentType());
 			photoEntity.setItemAuctionEntity(itemAuctionEntity);
 			photoService.savePhoto(photoEntity);
-			itemAuctionEntity.setPhotos(Arrays.asList(photoEntity));
+			itemAuctionEntity.setPhotos(new HashSet<>(Arrays.asList(photoEntity)));
+			itemAuctionEntity.setStatus(true);
 			itemAuctionRepository.save(itemAuctionEntity);
 
 		} else {
@@ -85,15 +89,17 @@ public class ItemAuctionServiceImpl implements ItemAuctionService {
 
 	@Override
 	public List<ItemAuctionDto> getAllItemAuctions() {
-		return itemAuctionRepository.findAll().stream().map(itemAucion -> extracted(itemAucion))
+		List<ItemAuctionDto> listItemAuction = itemAuctionRepository.findAll().stream()
+				.map(itemAucion -> extracted(itemAucion)).collect(Collectors.toList());
+		return listItemAuction.stream().filter(itemAuction -> itemAuction.getStatus() == true)
 				.collect(Collectors.toList());
 	}
 
 	private ItemAuctionDto extracted(ItemAuctionEntity itemAucion) {
 		return new ItemAuctionDto(itemAucion.getItemAuctionId(), itemAucion.getDescription(), itemAucion.getTitle(),
-				convertListPhoto.convertToPhotoDto(itemAucion.getPhotos()), itemAucion.getStartBidAmount(),
-				itemAucion.getAutoAcceptAmount(), itemAucion.getIncrement(), itemAucion.getStartDate(),
-				itemAucion.getEndDate(),
+				convertListPhoto.convertToPhotoDto(new ArrayList<>(itemAucion.getPhotos())),
+				itemAucion.getStartBidAmount(), itemAucion.getAutoAcceptAmount(), itemAucion.getIncrement(),
+				itemAucion.getStartDate(), itemAucion.getEndDate(), itemAucion.getStatus(),
 				new UserDto(itemAucion.getSeller().getUserId(), itemAucion.getSeller().getEmail(),
 						itemAucion.getSeller().getPhone(), itemAucion.getSeller().getFullName()),
 				new GenreDto(itemAucion.getGenre().getGenreId(), itemAucion.getGenre().getGenreName()));
@@ -105,6 +111,8 @@ public class ItemAuctionServiceImpl implements ItemAuctionService {
 				"Could not found the item auction with item auction id: " + itemAuctionId + "."));
 		var itemAuctionDto = new ItemAuctionDto();
 		BeanUtils.copyProperties(itemAuctionEntity, itemAuctionDto);
+		List<PhotoEntity> listPhotoEntity = new ArrayList<>(itemAuctionEntity.getPhotos());
+		itemAuctionDto.setPhotos(convertListPhoto.convertToListPhotoDto(listPhotoEntity));
 		return itemAuctionDto;
 	}
 
@@ -123,9 +131,9 @@ public class ItemAuctionServiceImpl implements ItemAuctionService {
 		itemAuctionEntity.setGenre(genreEntity);
 		itemAuctionEntity.setSeller(sellerEntity);
 		itemAuctionEntity.setDescription(itemAuctionDto.getDescription());
-
-		itemAuctionEntity
-				.setPhotos(convertListPhoto.convertToPhotoEntity(itemAuctionDto.getPhotos(), itemAuctionEntity));
+		Set<PhotoEntity> setPhotoEntity = new HashSet<>(
+				convertListPhoto.convertToListPhotoEntity(itemAuctionDto.getPhotos(), itemAuctionEntity));
+		itemAuctionEntity.setPhotos(setPhotoEntity);
 		itemAuctionEntity.setStartBidAmount(itemAuctionDto.getStartBidAmount());
 		itemAuctionEntity.setAutoAcceptAmount(itemAuctionDto.getAutoAcceptAmount());
 		itemAuctionEntity.setIncrement(itemAuctionDto.getIncrement());
@@ -159,7 +167,9 @@ public class ItemAuctionServiceImpl implements ItemAuctionService {
 
 	@Override
 	public List<ItemAuctionDto> getAllGenreTitle(String title) {
-		return itemAuctionRepository.findAllBytitle(title).stream().map(itemAucion -> extracted(itemAucion))
+		List<ItemAuctionDto> listItemAuction = itemAuctionRepository.findAllBytitle(title).stream()
+				.map(itemAucion -> extracted(itemAucion)).collect(Collectors.toList());
+		return listItemAuction.stream().filter(itemAuction -> itemAuction.getStatus() == true)
 				.collect(Collectors.toList());
 	}
 
@@ -197,5 +207,11 @@ public class ItemAuctionServiceImpl implements ItemAuctionService {
 		BeanUtils.copyProperties(genreDto, genreEntity);
 		itemAuctionEntity.setGenre(genreEntity);
 		itemAuctionRepository.save(itemAuctionEntity);
+	}
+
+	@Override
+	public List<ItemAuctionEntity> getAllItemAuctionsByStatus() {
+		return itemAuctionRepository.findAll().stream().filter(itemAuction -> itemAuction.getStatus() == true)
+				.collect(Collectors.toList());
 	}
 }

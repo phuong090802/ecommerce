@@ -1,7 +1,7 @@
 package com.ute.ecwebapp.dto;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import javax.validation.constraints.*;
 
@@ -19,7 +19,7 @@ public class BidDto implements Serializable {
 	private Integer id;
 	
 	@NotNull
-	private LocalDateTime time;
+	private Date time;
 
 	@NotNull
 	private Double value;

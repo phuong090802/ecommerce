@@ -1,8 +1,15 @@
 package com.ute.ecwebapp.service.impl;
 
+import static com.ute.ecwebapp.config.Constraint.SUBURBANONE;
+import static com.ute.ecwebapp.config.Constraint.SUBURBANTWO;
+import static com.ute.ecwebapp.config.Constraint.URBAN;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
@@ -69,12 +76,12 @@ public class UserServiceImpl implements UserService {
 	public void createAccount(String json) throws BeansException, IOException, InterruptedException {
 		var userDto = dtoMapper.convertToUserDto(json);
 		var userName = userDto.getAccount().getUserName();
-		if (!validationUtil.validationEmail(userDto.getEmail())) {
-			throw new BadRequestException("Email is not valid.");
-		}
-		if (!validationUtil.validationPhone(userDto.getPhone())) {
-			throw new BadRequestException("Phone is not valid.");
-		}
+//		if (!validationUtil.validationEmail(userDto.getEmail())) {
+//			throw new BadRequestException("Email is not valid.");
+//		}
+//		if (!validationUtil.validationPhone(userDto.getPhone())) {
+//			throw new BadRequestException("Phone is not valid.");
+//		}
 		if (userName != null) {
 			if (accountService.accountNameExist(userName)) {
 				throw new BadRequestException("User name: " + userName + " has already existed.");
@@ -87,11 +94,15 @@ public class UserServiceImpl implements UserService {
 				accountEntity.setRole(roleService.getByName(RoleName.USER));
 				accountEntity.setUser(userEntity);
 				userRepository.save(userEntity);
-				System.out.println(userDto.getAddress().toString());
 				if (!userDto.getAddress().isEmpty()) {
-					addressService
-							.createAddress(convertListAdress.convertToAddressEntity(userDto.getAddress(), userEntity));
+					List<AddressDto> listAddressDto = new ArrayList<>(userDto.getAddress());
+					Set<AddressEntity> setAddressEntity = new HashSet<>(
+							convertListAdress.convertToAddressEntity(listAddressDto, userEntity));
+					addressService.createAddress(setAddressEntity);
 				}
+				var addressEntity = addressService.getLastByUser(userEntity);
+				addressEntity.setIsPrimary(true);
+				addressService.updateAddress(addressEntity);
 				accountService.createAccount(accountEntity);
 			}
 		} else {
@@ -101,9 +112,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<UserDto> getAllUsers() {
-		return userRepository
-				.findAll().stream().map(user -> new UserDto(user.getUserId(), user.getFullName(), user.getEmail(),
-						user.getPhone(), convertListAdress.convertToAddressDto(user.getAddress())))
+		return userRepository.findAll().stream()
+				.map(user -> new UserDto(user.getUserId(), user.getFullName(), user.getEmail(), user.getPhone(),
+						convertListAdress.convertToAddressDto(new ArrayList<>(user.getAddress()))))
 				.collect(Collectors.toList());
 	}
 
@@ -113,7 +124,8 @@ public class UserServiceImpl implements UserService {
 				.orElseThrow(() -> new BadRequestException("Could not found the user with user id: " + userId + "."));
 		var userDto = new UserDto();
 		BeanUtils.copyProperties(userEntity, userDto);
-		userDto.setAddress(convertListAdress.convertToAddressDto(userEntity.getAddress()));
+		List<AddressEntity> listAddressEntity = new ArrayList<>(userEntity.getAddress());
+		userDto.setAddress(convertListAdress.convertToAddressDto(listAddressEntity));
 		return userDto;
 	}
 
@@ -131,9 +143,15 @@ public class UserServiceImpl implements UserService {
 			userEntity.setFullName(userDto.getFullName());
 			userEntity.setEmail(userDto.getEmail());
 			userEntity.setPhone(userDto.getPhone());
-			userEntity.setAddress(convertListAdress.convertToAddressEntity(userDto.getAddress(), userEntity));
+			List<AddressDto> listAddressDto = new ArrayList<>(userDto.getAddress());
+			Set<AddressEntity> setAddressEntity = new HashSet<>(
+					convertListAdress.convertToAddressEntity(listAddressDto, userEntity));
+			userEntity.setAddress(setAddressEntity);
 			userRepository.save(userEntity);
 			addressService.updateAddress(userDto, userEntity);
+			var addressEntity = addressService.getLastByUser(userEntity);
+			addressEntity.setIsPrimary(true);
+			addressService.updateAddress(addressEntity);
 		}
 	}
 
@@ -155,7 +173,8 @@ public class UserServiceImpl implements UserService {
 				() -> new BadRequestException("Could not found the user with user with email: " + email + "."));
 		var userDto = new UserDto();
 		BeanUtils.copyProperties(userEntity, userDto);
-		userDto.setAddress(convertListAdress.convertToAddressDto(userEntity.getAddress()));
+		List<AddressEntity> listAddressEntity = new ArrayList<>(userEntity.getAddress());
+		userDto.setAddress(convertListAdress.convertToAddressDto(listAddressEntity));
 		return userDto;
 	}
 
@@ -211,6 +230,32 @@ public class UserServiceImpl implements UserService {
 				.orElseThrow(() -> new BadRequestException("Could not found the user with user id: " + userId + "."));
 		BeanUtils.copyProperties(userDto, userEntity);
 		addressEntity.setUser(userEntity);
+		addressEntity.setIsPrimary(true);
+		for (var state : URBAN) {
+			if (addressEntity.getState().matches(state)) {
+				addressEntity.setDegree(0);
+			}
+		}
+		for (var state : SUBURBANONE) {
+			if (addressEntity.getState().matches(state)) {
+				addressEntity.setDegree(1);
+			}
+		}
+		for (var state : SUBURBANTWO) {
+			if (addressEntity.getState().matches(state)) {
+				addressEntity.setDegree(2);
+			}
+		}
+
+		HashSet<AddressEntity> setAddressEntity = new HashSet<>(addressService.getAllByuser(userEntity));
+		List<AddressEntity> listAddress = new ArrayList<>(setAddressEntity);
+		var lastAddress = addressService.getLastByUser(userEntity);
+		for (var address : listAddress) {
+			if (address.getAddressId() != lastAddress.getAddressId()) {
+				address.setIsPrimary(false);
+			}
+		}
+		addressService.updateAddress(setAddressEntity);
 		addressService.createAddress(addressEntity);
 	}
 }

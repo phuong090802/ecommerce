@@ -1,11 +1,12 @@
 package com.ute.ecwebapp.util;
 
+import static com.ute.ecwebapp.config.Constraint.*;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import com.ute.ecwebapp.dto.AddressDto;
 import com.ute.ecwebapp.dto.ItemAuctionDto;
@@ -16,7 +17,7 @@ import com.ute.ecwebapp.entity.ItemAuctionEntity;
 import com.ute.ecwebapp.entity.PhotoEntity;
 import com.ute.ecwebapp.entity.UserEntity;
 
-@Service
+@Component
 public class ConvertList {
 	public List<AddressDto> convertToAddressDto(List<AddressEntity> listAddressEntity) {
 		List<AddressDto> listAddress = new ArrayList<>();
@@ -30,9 +31,29 @@ public class ConvertList {
 	}
 
 	public List<AddressEntity> convertToAddressEntity(List<AddressDto> listAddressDto, UserEntity userEntity) {
-		return listAddressDto.stream()
-				.map(address -> new AddressEntity(address.getFullAddress(), address.getState(), userEntity))
-				.collect(Collectors.toList());
+		List<AddressEntity> listAddress = new ArrayList<>();
+		for (var address : listAddressDto) {
+			var addressEntity = new AddressEntity();
+			BeanUtils.copyProperties(address, addressEntity);
+			addressEntity.setUser(userEntity);
+			for (var state : URBAN) {
+				if (address.getState().matches(state)) {
+					addressEntity.setDegree(0);
+				}
+			}
+			for (var state : SUBURBANONE) {
+				if (address.getState().matches(state)) {
+					addressEntity.setDegree(1);
+				}
+			}
+			for (var state : SUBURBANTWO) {
+				if (address.getState().matches(state)) {
+					addressEntity.setDegree(2);
+				}
+			}
+			listAddress.add(addressEntity);
+		}
+		return listAddress;
 	}
 
 	public List<PhotoDto> convertToPhotoDto(List<PhotoEntity> listPhotoEntity) {
@@ -46,11 +67,23 @@ public class ConvertList {
 		return listPhoto;
 	}
 
-	public List<PhotoEntity> convertToPhotoEntity(List<PhotoDto> listPhotoDto, ItemAuctionEntity itemAuctionEntity) {
+	public List<PhotoEntity> convertToListPhotoEntity(List<PhotoDto> listPhotoDto,
+			ItemAuctionEntity itemAuctionEntity) {
 		List<PhotoEntity> listPhoto = new ArrayList<>();
 		for (var photo : listPhotoDto) {
 			listPhoto.add(new PhotoEntity(photo.getPhotoId(), photo.getPhotoName(), photo.getPhotoData(),
 					photo.getMime(), itemAuctionEntity));
+		}
+		return listPhoto;
+	}
+
+	public List<PhotoDto> convertToListPhotoDto(List<PhotoEntity> listPhotoEntity) {
+		List<PhotoDto> listPhoto = new ArrayList<>();
+		for (var photo : listPhotoEntity) {
+			var itemAuctionDto = new ItemAuctionDto();
+			BeanUtils.copyProperties(photo.getItemAuctionEntity(), itemAuctionDto);
+			listPhoto.add(new PhotoDto(photo.getPhotoId(), photo.getPhotoName(), photo.getPhotoData(), photo.getMime(),
+					itemAuctionDto));
 		}
 		return listPhoto;
 	}

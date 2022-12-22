@@ -18,7 +18,7 @@ import com.ute.ecwebapp.filter.JwtTokenFilter;
 public class SpringSecurityConfiguration {
 
 	private static final String[] WHITE_LIST_URL = { "/api/login", "/api/user", "/api/forget", "/api/user/forget",
-			"/api/image/source/*"};
+			"/api/image/source/*", "/api/item-auctions", "/api/item-auction/*"};
 
 	@Autowired
 	private JwtTokenFilter jwtTokenFilter;

@@ -3,7 +3,6 @@ package com.ute.ecwebapp.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -15,6 +14,7 @@ import com.ute.ecwebapp.service.UserService;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin("http://localhost:3000")
 public class AccountController {
 
 	@Autowired
@@ -30,7 +30,6 @@ public class AccountController {
 				HttpStatus.OK);
 	}
 
-	@PreAuthorize("hasAuthority('USER', 'ADMIN')")
 	@PutMapping("/forget")
 	public ResponseEntity<?> forget(@RequestBody String json) throws JsonMappingException, JsonProcessingException {
 		userService.forget(json);

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,12 +19,13 @@ import com.ute.ecwebapp.service.UserService;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin("http://localhost:3000")
 public class AddressController {
 
 	@Autowired
 	private UserService userService;
 
-	@PreAuthorize("hasAuthority('USER', 'ADMIN')")
+	@PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
 	@PostMapping("/address/{userId}")
 	public ResponseEntity<?> createAddress(@RequestBody AddressDto addressDto, @PathVariable Integer userId)
 			throws JsonMappingException, JsonProcessingException {

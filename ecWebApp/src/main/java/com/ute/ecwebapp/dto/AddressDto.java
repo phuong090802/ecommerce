@@ -18,10 +18,14 @@ public class AddressDto {
 	@Null
 	private String state;
 
+	private Integer degree;
+
+	private Boolean isPrimary;
+
 	@NotNull
 	private UserDto user;
 
-	public AddressDto(String fullAddress, String state, UserDto user) {
+	public AddressDto(String fullAddress, String state, Integer degree, UserDto user) {
 		super();
 		this.fullAddress = fullAddress;
 		this.state = state;
@@ -33,6 +37,14 @@ public class AddressDto {
 		this.addressId = addressId;
 		this.fullAddress = fullAddress;
 		this.state = state;
+	}
+
+	public AddressDto(Integer addressId, String fullAddress, String state, UserDto user) {
+		super();
+		this.addressId = addressId;
+		this.fullAddress = fullAddress;
+		this.state = state;
+		this.user = user;
 	}
 
 }

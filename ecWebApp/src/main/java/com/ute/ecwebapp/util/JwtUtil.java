@@ -21,8 +21,7 @@ public class JwtUtil {
 	public String generateAccessToken(AccountEntity accountEntity) {
 		return Jwts.builder().setSubject(accountEntity.getUserName()).setIssuer(jwtIssuer)
 				.claim("ROLE", accountEntity.getRole().getRoleName()).claim("SUBJECT_ID", accountEntity.getAccountId())
-				.setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000))
-				.signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
+				.setIssuedAt(new Date()).signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
 	}
 
 	public boolean validate(String token) {

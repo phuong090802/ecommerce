@@ -1,6 +1,6 @@
 package com.ute.ecwebapp.dto;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.*;
@@ -39,6 +39,8 @@ public class ItemAuctionDto {
 	@NotNull
 	private Date endDate;
 
+	private Boolean status;
+
 	@NotNull
 	private UserDto seller;
 
@@ -53,7 +55,7 @@ public class ItemAuctionDto {
 
 	@NotNull
 	public ItemAuctionDto(String description, String title, List<PhotoDto> photos, Double startBidAmount,
-			Double autoAcceptAmount, Double increment, Date startDate, Date endDate, UserDto seller) {
+			Double autoAcceptAmount, Double increment, Date startDate, Date endDate, Boolean status, UserDto seller) {
 		super();
 		this.description = description;
 		this.title = title;
@@ -63,12 +65,13 @@ public class ItemAuctionDto {
 		this.increment = increment;
 		this.startDate = startDate;
 		this.endDate = endDate;
+		this.status = status;
 		this.seller = seller;
 	}
 
 	public ItemAuctionDto(Integer itemAuctionId, String description, String title, List<PhotoDto> photos,
 			Double startBidAmount, Double autoAcceptAmount, Double increment, Date startDate, Date endDate,
-			UserDto seller, GenreDto genre) {
+			Boolean status, UserDto seller, GenreDto genre) {
 		super();
 		this.itemAuctionId = itemAuctionId;
 		this.description = description;
@@ -79,9 +82,9 @@ public class ItemAuctionDto {
 		this.increment = increment;
 		this.startDate = startDate;
 		this.endDate = endDate;
+		this.status = status;
 		this.seller = seller;
 		this.genre = genre;
 	}
-
 
 }

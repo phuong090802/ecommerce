@@ -1,7 +1,7 @@
 package com.ute.ecwebapp.entity;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import javax.persistence.*;
 
@@ -21,7 +21,7 @@ public class BidEntity implements Serializable {
 	private Integer id;
 
 	@Column(nullable =  false)
-	private LocalDateTime time;
+	private Date time;
 	
 	@Column(nullable =  false)
 	private Double value;

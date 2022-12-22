@@ -1,6 +1,6 @@
 package com.ute.ecwebapp.entity;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.*;
 
@@ -24,6 +24,6 @@ public class RoleEntity {
 	private RoleName roleName;
 
 	@OneToMany(mappedBy = "role")
-	private List<AccountEntity> accounts;
+	private Set<AccountEntity> accounts;
 
 }
