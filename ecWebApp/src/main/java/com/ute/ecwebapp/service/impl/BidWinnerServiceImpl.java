@@ -108,7 +108,7 @@ public class BidWinnerServiceImpl implements BidWinnerService {
 				itemAuctionService.updateItemAuction(itemAuction);
 			}
 			for (var bid : itemAuction.getBids()) {
-				if (bid.getValue() >= itemAuction.getAutoAcceptAmount()) {
+				if (bid.getValue() >= itemAuction.getCurrentPrice()) {
 					var sellerEntity = bidWinnerUtil.getSeller(itemAuction);
 					var buyerEntity = bidWinnerUtil.getBuyer(itemAuction);
 					List<AddressEntity> addressBuyer = new ArrayList<>(buyerEntity.getAddress());
