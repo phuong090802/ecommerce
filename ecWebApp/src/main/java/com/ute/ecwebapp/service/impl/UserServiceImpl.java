@@ -76,12 +76,12 @@ public class UserServiceImpl implements UserService {
 	public void createAccount(String json) throws BeansException, IOException, InterruptedException {
 		var userDto = dtoMapper.convertToUserDto(json);
 		var userName = userDto.getAccount().getUserName();
-		if (!validationUtil.validationEmail(userDto.getEmail())) {
-			throw new BadRequestException("Email is not valid.");
-		}
-		if (!validationUtil.validationPhone(userDto.getPhone())) {
-			throw new BadRequestException("Phone is not valid.");
-		}
+//		if (!validationUtil.validationEmail(userDto.getEmail())) {
+//			throw new BadRequestException("Email is not valid.");
+//		}
+//		if (!validationUtil.validationPhone(userDto.getPhone())) {
+//			throw new BadRequestException("Phone is not valid.");
+//		}
 		if (userName != null) {
 			if (accountService.accountNameExist(userName)) {
 				throw new BadRequestException("User name: " + userName + " has already existed.");
@@ -92,7 +92,8 @@ public class UserServiceImpl implements UserService {
 				BeanUtils.copyProperties(userDto.getAccount(), accountEntity);
 				accountEntity.setPassword(passwordEncoder.encode(userDto.getAccount().getPassword()));
 				accountEntity.setRole(roleService.getByName(RoleName.USER));
-				accountEntity.setUser(userEntity);
+				accountService.createAccount(accountEntity);
+				userEntity.setAccount(accountEntity);
 				userRepository.save(userEntity);
 				if (!userDto.getAddress().isEmpty()) {
 					List<AddressDto> listAddressDto = new ArrayList<>(userDto.getAddress());
@@ -103,7 +104,7 @@ public class UserServiceImpl implements UserService {
 				var addressEntity = addressService.getLastByUser(userEntity);
 				addressEntity.setIsPrimary(true);
 				addressService.updateAddress(addressEntity);
-				accountService.createAccount(accountEntity);
+				
 			}
 		} else {
 			throw new BadRequestException("Input is not valid.");
