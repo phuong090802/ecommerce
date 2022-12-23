@@ -25,7 +25,7 @@ public class BidDto implements Serializable {
 	private Double value;
 	
 	@NotNull
-	private String status;
+	private Integer status;
 	
 	@NotNull
 	private ItemAuctionDto itemAuction;

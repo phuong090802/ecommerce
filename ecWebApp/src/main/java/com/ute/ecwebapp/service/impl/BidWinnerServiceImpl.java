@@ -13,11 +13,13 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.ute.ecwebapp.entity.AddressEntity;
+import com.ute.ecwebapp.entity.BidEntity;
 import com.ute.ecwebapp.entity.BidWinnerEntity;
 import com.ute.ecwebapp.entity.BidWinnerEntityId;
 import com.ute.ecwebapp.entity.ItemAuctionEntity;
 import com.ute.ecwebapp.entity.UserEntity;
 import com.ute.ecwebapp.repository.BidWinnerRepository;
+import com.ute.ecwebapp.service.BidService;
 import com.ute.ecwebapp.service.BidWinnerService;
 import com.ute.ecwebapp.service.ItemAuctionService;
 import com.ute.ecwebapp.service.UserService;
@@ -41,6 +43,9 @@ public class BidWinnerServiceImpl implements BidWinnerService {
 
 	@Autowired
 	private BidWinnerUtil bidWinnerUtil;
+
+	@Autowired
+	private BidService bidService;
 
 	@Override
 	public void createBidWinner(String json) throws JsonMappingException, JsonProcessingException {
@@ -105,6 +110,21 @@ public class BidWinnerServiceImpl implements BidWinnerService {
 				bidWinnerEntity.setBidWinnerId(bidWinnerEntityId);
 				bidWinnerRepository.save(bidWinnerEntity);
 				itemAuction.setStatus(false);
+				List<BidEntity> listBidEntity = new ArrayList<>(buyerEntity.getBids());
+				for (var bid : listBidEntity) {
+					if (bid.getItemAuction().getItemAuctionId() == bidWinnerEntityId.getItemAuction()
+							.getItemAuctionId()) {
+						bid.setStatus(1);
+						bidService.updateBid(bid);
+					}
+				}
+				List<BidEntity> _listBidEntity = new ArrayList<>(itemAuction.getBids());
+				for (var bid : _listBidEntity) {
+					if (bid.getUser().getUserId() != buyerEntity.getUserId()) {
+						bid.setStatus(0);
+						bidService.updateBid(bid);
+					}
+				}
 				itemAuctionService.updateItemAuction(itemAuction);
 			}
 			for (var bid : itemAuction.getBids()) {
@@ -129,9 +149,23 @@ public class BidWinnerServiceImpl implements BidWinnerService {
 					bidWinnerRepository.save(bidWinnerEntity);
 					itemAuction.setStatus(false);
 					itemAuctionService.updateItemAuction(itemAuction);
+					List<BidEntity> listBidEntity = new ArrayList<>(buyerEntity.getBids());
+					for (var bidEntity : listBidEntity) {
+						if (bidEntity.getItemAuction().getItemAuctionId() == bidWinnerEntityId.getItemAuction()
+								.getItemAuctionId()) {
+							bidEntity.setStatus(1);
+							bidService.updateBid(bid);
+						}
+					}
+					List<BidEntity> _listBidEntity = new ArrayList<>(itemAuction.getBids());
+					for (var bidEntity : _listBidEntity) {
+						if (bidEntity.getUser().getUserId() != buyerEntity.getUserId()) {
+							bidEntity.setStatus(0);
+							bidService.updateBid(bid);
+						}
+					}
 				}
 			}
-
 		}
 	}
 }

@@ -45,6 +45,7 @@ public class BidServiceImpl implements BidService {
 		BeanUtils.copyProperties(itemAuctionService.getItemAuctionById(itemAuctionId), itemAuctionEntity);
 		bidEntity.setItemAuction(itemAuctionEntity);
 		bidEntity.setUser(buyerEntity);
+		bidEntity.setStatus(2);
 		bidRepository.save(bidEntity);
 	}
 
@@ -96,5 +97,10 @@ public class BidServiceImpl implements BidService {
 	public BidEntity getLastByItemAuctionEntity(ItemAuctionEntity itemAuctionEntity) {
 		return bidRepository.findTopByItemAuctionOrderByItemAuctionDesc(itemAuctionEntity)
 				.orElseThrow(() -> new BadRequestException("Could not found the account with item auction."));
+	}
+
+	@Override
+	public void updateBid(BidEntity bidEntity) {
+		bidRepository.save(bidEntity);
 	}
 }

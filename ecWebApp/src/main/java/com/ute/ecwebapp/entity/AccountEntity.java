@@ -29,10 +29,9 @@ public class AccountEntity {
 
 	private Date expire;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
+	@OneToOne(mappedBy = "account")
 	private UserEntity user;
-
+	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "role_id", referencedColumnName = "role_id", nullable = false)
 	private RoleEntity role;

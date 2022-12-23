@@ -42,6 +42,7 @@ public class ItemAuctionDto {
 	@NotNull
 	private Date endDate;
 
+	@NotNull
 	private Boolean status;
 
 	@NotNull

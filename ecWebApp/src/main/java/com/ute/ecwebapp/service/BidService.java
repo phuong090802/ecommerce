@@ -15,10 +15,10 @@ public interface BidService {
 	BidDto getById(Integer id);
 
 	void createBid(BidEntity bidEntity);
-	
 
 	void updateBid(BidDto bidDto, Integer itemAuctionId);
-	
+
 	BidEntity getLastByItemAuctionEntity(ItemAuctionEntity itemAuctionEntity);
 
+	void updateBid(BidEntity bidEntity);
 }

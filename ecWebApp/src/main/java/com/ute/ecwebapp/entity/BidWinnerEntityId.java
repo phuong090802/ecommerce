@@ -14,7 +14,7 @@ public class BidWinnerEntityId implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name = "item_auction_id", nullable = false)
 	private ItemAuctionEntity itemAuction;
 

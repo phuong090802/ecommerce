@@ -20,14 +20,14 @@ public class BidEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@Column(nullable =  false)
+	@Column(nullable = false)
 	private Date time;
-	
-	@Column(nullable =  false)
+
+	@Column(nullable = false)
 	private Double value;
 
-	@Column(nullable =  false)
-	private String status;
+	@Column(columnDefinition = "TINYINT(2) DEFAULT 2", name = "status")
+	private Integer status;
 
 	@ManyToOne
 	@JoinColumn(name = "item_id", nullable = false)

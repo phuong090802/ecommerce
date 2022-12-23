@@ -29,8 +29,11 @@ public class UserEntity {
 	@Column(nullable = false, unique = true)
 	private String email;
 
-	@OneToOne(mappedBy = "user")
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "account_id", referencedColumnName = "account_id", nullable = false)
 	private AccountEntity account;
+	
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<AddressEntity> address;
