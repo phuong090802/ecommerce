@@ -66,7 +66,7 @@ public class GenreController {
 	@PostMapping("/genre/item-auction/{genreId}")
 	public ResponseEntity<?> updateBid(@RequestBody ItemAuctionDto itemAuctionDto, @PathVariable Integer genreId)
 			throws IllegalStateException, IOException {
-		itemAuctionService.updateItemAuctionId(itemAuctionDto, genreId);
+		itemAuctionService.updateItemAuction(itemAuctionDto, genreId);
 		return new ResponseEntity<>(
 				ResponseDTO.builder().responseMessage("Add new ItemAuctionId successfully.").build(),
 				HttpStatus.CREATED);

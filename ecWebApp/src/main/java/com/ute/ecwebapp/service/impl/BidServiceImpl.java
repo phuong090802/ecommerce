@@ -91,4 +91,10 @@ public class BidServiceImpl implements BidService {
 		bidEntity.setItemAuction(itemAuctionEntity);
 		bidRepository.save(bidEntity);
 	}
+
+	@Override
+	public BidEntity getLastByItemAuctionEntity(ItemAuctionEntity itemAuctionEntity) {
+		return bidRepository.findTopByItemAuctionOrderByItemAuctionDesc(itemAuctionEntity)
+				.orElseThrow(() -> new BadRequestException("Could not found the account with item auction."));
+	}
 }

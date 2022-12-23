@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.ute.ecwebapp.dto.BidDto;
 import com.ute.ecwebapp.entity.BidEntity;
+import com.ute.ecwebapp.entity.ItemAuctionEntity;
 
 public interface BidService {
 
@@ -17,5 +18,7 @@ public interface BidService {
 	
 
 	void updateBid(BidDto bidDto, Integer itemAuctionId);
+	
+	BidEntity getLastByItemAuctionEntity(ItemAuctionEntity itemAuctionEntity);
 
 }

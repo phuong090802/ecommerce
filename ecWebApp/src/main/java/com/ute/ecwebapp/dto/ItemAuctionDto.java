@@ -34,6 +34,9 @@ public class ItemAuctionDto {
 	private Double increment;
 
 	@NotNull
+	private Double currentPrice;
+
+	@NotNull
 	private Date startDate;
 
 	@NotNull
@@ -55,7 +58,8 @@ public class ItemAuctionDto {
 
 	@NotNull
 	public ItemAuctionDto(String description, String title, List<PhotoDto> photos, Double startBidAmount,
-			Double autoAcceptAmount, Double increment, Date startDate, Date endDate, Boolean status, UserDto seller) {
+			Double autoAcceptAmount, Double increment, Double currentPrice, Date startDate, Date endDate,
+			Boolean status, UserDto seller) {
 		super();
 		this.description = description;
 		this.title = title;
@@ -63,6 +67,7 @@ public class ItemAuctionDto {
 		this.startBidAmount = startBidAmount;
 		this.autoAcceptAmount = autoAcceptAmount;
 		this.increment = increment;
+		this.currentPrice = currentPrice;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.status = status;
@@ -70,8 +75,8 @@ public class ItemAuctionDto {
 	}
 
 	public ItemAuctionDto(Integer itemAuctionId, String description, String title, List<PhotoDto> photos,
-			Double startBidAmount, Double autoAcceptAmount, Double increment, Date startDate, Date endDate,
-			Boolean status, UserDto seller, GenreDto genre) {
+			Double startBidAmount, Double autoAcceptAmount, Double increment, Double currentPrice, Date startDate,
+			Date endDate, Boolean status, UserDto seller, GenreDto genre) {
 		super();
 		this.itemAuctionId = itemAuctionId;
 		this.description = description;
@@ -80,6 +85,7 @@ public class ItemAuctionDto {
 		this.startBidAmount = startBidAmount;
 		this.autoAcceptAmount = autoAcceptAmount;
 		this.increment = increment;
+		this.currentPrice = currentPrice;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.status = status;

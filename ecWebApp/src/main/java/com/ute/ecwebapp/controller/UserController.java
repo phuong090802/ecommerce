@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.ute.ecwebapp.dto.*;
+import com.ute.ecwebapp.service.AccountService;
 import com.ute.ecwebapp.service.UserService;
 
 @RestController
@@ -22,6 +23,9 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private AccountService accountService;
 
 	@PostMapping("/user")
 	public ResponseEntity<?> createUser(@RequestBody String json)
@@ -58,5 +62,13 @@ public class UserController {
 		return new ResponseEntity<>(ResponseDTO.builder().responseMessage("Update password successfully.").build(),
 				HttpStatus.OK);
 	}
-	
+
+	@PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+	@PutMapping("/user/password")
+	public ResponseEntity<?> updatePassword(@RequestBody String json, @PathVariable Integer userId)
+			throws JsonMappingException, JsonProcessingException {
+		accountService.updatePassword(userId, json);
+		return new ResponseEntity<>(ResponseDTO.builder().responseMessage("Update password successfully.").build(),
+				HttpStatus.OK);
+	}
 }

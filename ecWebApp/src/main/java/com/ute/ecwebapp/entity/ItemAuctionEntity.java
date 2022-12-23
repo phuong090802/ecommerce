@@ -37,12 +37,15 @@ public class ItemAuctionEntity {
 	@Column(columnDefinition = "DECIMAL(12,2) NOT NULL DEFAULT 0")
 	private Double increment;
 
+	@Column(name = "current_price", columnDefinition = "DECIMAL(12,2) NOT NULL DEFAULT 0")
+	private Double currentPrice;
+
 	@Column(nullable = false, name = "start_date")
 	private Date startDate;
 
 	@Column(nullable = false, name = "end_date")
 	private Date endDate;
-	
+
 	@Column(columnDefinition = "TINYINT(1) DEFAULT 0", name = "status")
 	private Boolean status;
 
@@ -53,16 +56,15 @@ public class ItemAuctionEntity {
 	@ManyToOne
 	@JoinColumn(name = "genre_id", nullable = false)
 	private GenreEntity genre;
-	
+
 	@OneToMany(mappedBy = "itemAuction", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<BidEntity> bids;
-	
-	
+
 	@OneToMany(mappedBy = "itemAuctionEntity", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<PhotoEntity> photos;
 
 	public ItemAuctionEntity(String description, String title, Set<PhotoEntity> photos, Double startBidAmount,
-			Double autoAcceptAmount, Double increment, Date startDate, Date endDate, UserEntity seller,
+			Double autoAcceptAmount, Double increment,Double currentPrice, Date startDate, Date endDate, UserEntity seller,
 			GenreEntity genre) {
 		super();
 		this.description = description;
@@ -71,6 +73,7 @@ public class ItemAuctionEntity {
 		this.startBidAmount = startBidAmount;
 		this.autoAcceptAmount = autoAcceptAmount;
 		this.increment = increment;
+		this.currentPrice = currentPrice;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.seller = seller;
@@ -78,7 +81,7 @@ public class ItemAuctionEntity {
 	}
 
 	public ItemAuctionEntity(Integer itemAuctionId, String description, String title, Set<PhotoEntity> photos,
-			Double startBidAmount, Double autoAcceptAmount, Double increment, Date startDate, Date endDate,
+			Double startBidAmount, Double autoAcceptAmount, Double increment, Double currentPrice, Date startDate, Date endDate,
 			UserEntity seller, GenreEntity genre) {
 		super();
 		this.itemAuctionId = itemAuctionId;
@@ -88,6 +91,7 @@ public class ItemAuctionEntity {
 		this.startBidAmount = startBidAmount;
 		this.autoAcceptAmount = autoAcceptAmount;
 		this.increment = increment;
+		this.currentPrice = currentPrice;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.seller = seller;

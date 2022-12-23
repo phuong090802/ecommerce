@@ -184,7 +184,6 @@ public class UserServiceImpl implements UserService {
 		var userEntity = userRepository.findByemail(email).orElseThrow(
 				() -> new BadRequestException("Could not found the user with user with email: " + email + "."));
 		String otp = RandomString.make(8);
-
 		var accountEntity = userEntity.getAccount();
 		accountEntity.setExpire(new Date(System.currentTimeMillis() + expire));
 		accountEntity.setOtp(otp);

@@ -29,7 +29,12 @@ public interface ItemAuctionService {
 
 	void createItemAuction(ItemAuctionEntity itemAuctionEntity);
 
-	void updateItemAuctionId(ItemAuctionDto itemAuctionDto, Integer genreId);
+	void updateItemAuction(ItemAuctionDto itemAuctionDto, Integer genreId);
 
 	List<ItemAuctionEntity> getAllItemAuctionsByStatus();
+
+	void updateItemAuction(ItemAuctionEntity itemAuction);
+	
+	void updateItemAuctionIncrement(Integer itemAuctionId, Double Increment);
+	
 }

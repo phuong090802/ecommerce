@@ -104,6 +104,8 @@ public class BidWinnerServiceImpl implements BidWinnerService {
 				bidWinnerEntity.setValue(bidWinnerUtil.getMaxPrice(new ArrayList<>(itemAuction.getBids())));
 				bidWinnerEntity.setBidWinnerId(bidWinnerEntityId);
 				bidWinnerRepository.save(bidWinnerEntity);
+				itemAuction.setStatus(false);
+				itemAuctionService.updateItemAuction(itemAuction);
 			}
 			for (var bid : itemAuction.getBids()) {
 				if (bid.getValue() >= itemAuction.getAutoAcceptAmount()) {
@@ -125,6 +127,8 @@ public class BidWinnerServiceImpl implements BidWinnerService {
 					bidWinnerEntity.setValue(bid.getValue());
 					bidWinnerEntity.setBidWinnerId(bidWinnerEntityId);
 					bidWinnerRepository.save(bidWinnerEntity);
+					itemAuction.setStatus(false);
+					itemAuctionService.updateItemAuction(itemAuction);
 				}
 			}
 
