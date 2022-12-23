@@ -76,12 +76,12 @@ public class UserServiceImpl implements UserService {
 	public void createAccount(String json) throws BeansException, IOException, InterruptedException {
 		var userDto = dtoMapper.convertToUserDto(json);
 		var userName = userDto.getAccount().getUserName();
-//		if (!validationUtil.validationEmail(userDto.getEmail())) {
-//			throw new BadRequestException("Email is not valid.");
-//		}
-//		if (!validationUtil.validationPhone(userDto.getPhone())) {
-//			throw new BadRequestException("Phone is not valid.");
-//		}
+		if (!validationUtil.validationEmail(userDto.getEmail())) {
+			throw new BadRequestException("Email is not valid.");
+		}
+		if (!validationUtil.validationPhone(userDto.getPhone())) {
+			throw new BadRequestException("Phone is not valid.");
+		}
 		if (userName != null) {
 			if (accountService.accountNameExist(userName)) {
 				throw new BadRequestException("User name: " + userName + " has already existed.");
