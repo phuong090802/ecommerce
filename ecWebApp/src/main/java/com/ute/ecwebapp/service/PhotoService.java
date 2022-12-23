@@ -11,5 +11,5 @@ public interface PhotoService {
 
 	void updatePhoto(PhotoEntity photoEntity);
 
-	PhotoDto getByitemAuctionEntity(ItemAuctionEntity itemAuctionEntity);
+	PhotoDto getByitemAuctionEntityAndPhotoId(ItemAuctionEntity itemAuctionEntit, Integer photoId);
 }

@@ -10,5 +10,5 @@ import com.ute.ecwebapp.entity.PhotoEntity;
 
 @Repository
 public interface PhotoRepository extends JpaRepository<PhotoEntity, Integer> {
-	Optional<PhotoEntity> findByitemAuctionEntity(ItemAuctionEntity itemAuctionEntity);
+	Optional<PhotoEntity> findByitemAuctionEntityAndPhotoId(ItemAuctionEntity itemAuctionEntity, Integer photoId);
 }

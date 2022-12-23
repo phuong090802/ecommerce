@@ -1,5 +1,7 @@
 package com.ute.ecwebapp.service.impl;
 
+import javax.persistence.criteria.CriteriaBuilder.In;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,9 +37,9 @@ public class PhotoServiceImpl implements PhotoService {
 	}
 
 	@Override
-	public PhotoDto getByitemAuctionEntity(ItemAuctionEntity itemAuctionEntity) {
+	public PhotoDto getByitemAuctionEntityAndPhotoId(ItemAuctionEntity itemAuctionEntity, Integer photoId) {
 		var photoDto = new PhotoDto();
-		var photoEntity = photoRepository.findByitemAuctionEntity(itemAuctionEntity)
+		var photoEntity = photoRepository.findByitemAuctionEntityAndPhotoId(itemAuctionEntity, photoId)
 				.orElseThrow(() -> new BadRequestException("Could not found the photo with item auction."));
 		BeanUtils.copyProperties(photoEntity, photoDto);
 		var itemAuctionDto = new ItemAuctionDto();
